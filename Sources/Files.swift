@@ -2,9 +2,9 @@ import Foundation
 
 extension FileManager {
     #if DEBUG
-        static let url = make(url: "walksmith.debug.archive")
+        static let url = make(url: "WalkHero.debug.archive")
     #else
-        static let url = make(url: "walksmith.archive")
+        static let url = make(url: "WalkHero.archive")
     #endif
     
     static var archive: Archive? {

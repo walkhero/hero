@@ -14,10 +14,11 @@ public final class Memory {
     private let pull = PassthroughSubject<Date, Never>()
     private let push = PassthroughSubject<Void, Never>()
     private let record = PassthroughSubject<CKRecord.ID?, Never>()
+    private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
     private let queue = DispatchQueue(label: "", qos: .utility)
     
     private var container: CKContainer {
-        .init(identifier: "iCloud.walksmith")
+        .init(identifier: "iCloud.WalkHero")
     }
     
     init() {
@@ -57,7 +58,7 @@ public final class Memory {
                     if status == .available {
                         self?.container.fetchUserRecordID { user, _ in
                             user.map {
-                                self?.record.send(.init(recordName: "archive_" + $0.recordName))
+                                self?.record.send(.init(recordName: $0.recordName))
                             }
                         }
                     }
@@ -68,7 +69,7 @@ public final class Memory {
             .compactMap { $0 }
             .combineLatest(pull)
             .removeDuplicates {
-                Calendar.current.dateComponents([.second], from: $0.1, to: $1.1).second! < 30
+                Calendar.current.dateComponents([.second], from: $0.1, to: $1.1).second! < 10
             }
             .sink { [weak self] id, _ in
                 let operation = CKFetchRecordsOperation(recordIDs: [id])
@@ -92,8 +93,38 @@ public final class Memory {
         
         record
             .compactMap { $0 }
+            .sink { [weak self] id in
+                let subscription = CKQuerySubscription(
+                    recordType: Self.type,
+                    predicate: .init(format: "recordID = %@", id),
+                    options: [.firesOnRecordUpdate])
+                subscription.notificationInfo = .init(alertLocalizationKey: "WalkHero")
+                
+                self?.container.publicCloudDatabase.save(subscription) { [weak self] subscription, _ in
+                    subscription.map {
+                        self?.subscription.send($0.subscriptionID)
+                    }
+                }
+            }
+            .store(in: &subs)
+        
+        subscription
+            .scan(nil) {
+                guard $0 != nil else { return nil }
+                return $1
+            }
+            .compactMap {
+                $0
+            }
+            .sink { [weak self] in
+                self?.container.publicCloudDatabase.delete(withSubscriptionID: $0) { _, _ in }
+            }
+            .store(in: &subs)
+        
+        record
+            .compactMap { $0 }
             .combineLatest(push)
-            .debounce(for: .seconds(4), scheduler: queue)
+            .debounce(for: .seconds(1), scheduler: queue)
             .sink { [weak self] id, _ in
                 let record = CKRecord(recordType: Self.type, recordID: id)
                 record[Self.asset] = CKAsset(fileURL: FileManager.url)
