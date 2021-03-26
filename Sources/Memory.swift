@@ -58,7 +58,7 @@ public final class Memory {
                     if status == .available {
                         self?.container.fetchUserRecordID { user, _ in
                             user.map {
-                                self?.record.send(.init(recordName: $0.recordName))
+                                self?.record.send(.init(recordName: "_" + $0.recordName))
                             }
                         }
                     }
