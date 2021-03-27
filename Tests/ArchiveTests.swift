@@ -36,6 +36,11 @@ final class ArchiveTests: XCTestCase {
         XCTAssertEqual(345, archive.data.mutating(transform: Archive.init(data:)).walks.first!.meters)
     }
     
+    func testTiles() {
+        archive.tiles = [2, 4, 1]
+        XCTAssertEqual([4, 1, 2], archive.data.mutating(transform: Archive.init(data:)).tiles)
+    }
+    
     func testStart() {
         let expect = expectation(description: "")
         archive.date = .distantPast
@@ -66,6 +71,20 @@ final class ArchiveTests: XCTestCase {
         }
         .store(in: &subs)
         archive.end()
+        waitForExpectations(timeout: 1)
+    }
+
+    func testEndWithData() {
+        let expect = expectation(description: "")
+        archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
+        Memory.shared.save.sink {
+            XCTAssertEqual(3, $0.walks.last?.steps)
+            XCTAssertEqual(4, $0.walks.last?.meters)
+            XCTAssertEqual([7, 2, 3, 5], $0.tiles)
+            expect.fulfill()
+        }
+        .store(in: &subs)
+        archive.end(steps: 3, meters: 4, tiles: [2, 5, 3, 7])
         waitForExpectations(timeout: 1)
     }
     

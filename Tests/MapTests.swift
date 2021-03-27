@@ -20,7 +20,7 @@ final class MapTests: XCTestCase {
     
     func testTilesWithinUInt32() {
         let start = MKMapPoint(aberCastle)
-        let end = MKMapPoint(.init(latitude: aberCastle.latitude + (km11 * 3), longitude: aberCastle.longitude + (km11 * 3)))
+        let end = MKMapPoint(.init(latitude: aberCastle.latitude + (km11 * 30), longitude: aberCastle.longitude + (km11 * 300)))
         let tileSize = MKMapRect.world.width / pow(2, Constants.map.zoom)
         let pointStart = MKMapPoint(x: floor(start.x / tileSize), y: floor(start.y / tileSize))
         let pointEnd = MKMapPoint(x: floor(end.x / tileSize), y: floor(end.y / tileSize))
