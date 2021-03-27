@@ -29,11 +29,11 @@ final class ArchiveTests: XCTestCase {
     
     func testWalks() {
         let start = Date(timeIntervalSinceNow: -500)
-        archive.walks = [.init(date: start, duration: 300, steps: 123, meters: 345)]
+        archive.walks = [.init(date: start, duration: 300, steps: 123, metres: 345)]
         XCTAssertEqual(300, Int(archive.data.mutating(transform: Archive.init(data:)).walks.first!.duration))
         XCTAssertEqual(start.timestamp, archive.data.mutating(transform: Archive.init(data:)).walks.first!.date.timestamp)
         XCTAssertEqual(123, archive.data.mutating(transform: Archive.init(data:)).walks.first!.steps)
-        XCTAssertEqual(345, archive.data.mutating(transform: Archive.init(data:)).walks.first!.meters)
+        XCTAssertEqual(345, archive.data.mutating(transform: Archive.init(data:)).walks.first!.metres)
     }
     
     func testTiles() {
@@ -79,12 +79,12 @@ final class ArchiveTests: XCTestCase {
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         Memory.shared.save.sink {
             XCTAssertEqual(3, $0.walks.last?.steps)
-            XCTAssertEqual(4, $0.walks.last?.meters)
+            XCTAssertEqual(4, $0.walks.last?.metres)
             XCTAssertEqual([7, 2, 3, 5], $0.tiles)
             expect.fulfill()
         }
         .store(in: &subs)
-        archive.end(steps: 3, meters: 4, tiles: [2, 5, 3, 7])
+        archive.end(steps: 3, metres: 4, tiles: [2, 5, 3, 7])
         waitForExpectations(timeout: 1)
     }
     

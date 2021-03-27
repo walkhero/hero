@@ -5,7 +5,7 @@ public struct Walk: Equatable, Archivable {
     let date: Date
     let duration: TimeInterval
     let steps: Int
-    let meters: Int
+    let metres: Int
     
     var active: Bool {
         duration == 0
@@ -16,7 +16,7 @@ public struct Walk: Equatable, Archivable {
             .adding(date.timestamp)
             .adding(UInt16(duration))
             .adding(UInt16(steps))
-            .adding(UInt16(meters))
+            .adding(UInt16(metres))
     }
     
     init() {
@@ -27,17 +27,17 @@ public struct Walk: Equatable, Archivable {
         date = .init(timestamp: data.uInt32())
         duration = .init(data.uInt16())
         steps = .init(data.uInt16())
-        meters = .init(data.uInt16())
+        metres = .init(data.uInt16())
     }
     
-    init(date: Date, duration: TimeInterval = 0, steps: Int = 0, meters: Int = 0) {
+    init(date: Date, duration: TimeInterval = 0, steps: Int = 0, metres: Int = 0) {
         self.date = date
         self.duration = duration
         self.steps = steps
-        self.meters = meters
+        self.metres = metres
     }
     
-    func end(steps: Int, meters: Int) -> Self {
+    func end(steps: Int, metres: Int) -> Self {
         .init(
             date: date,
             duration: {
@@ -45,6 +45,6 @@ public struct Walk: Equatable, Archivable {
             } (Calendar.current.dateComponents([.hour], from: date, to: .init()).hour! > Constants.walk.duration.max
                 ? Calendar.current.date(byAdding: .hour, value: Constants.walk.duration.fallback, to: date)! : .init()),
             steps: steps,
-            meters: meters)
+            metres: metres)
     }
 }

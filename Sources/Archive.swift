@@ -49,14 +49,16 @@ public struct Archive: Comparable, Archivable {
         walks.map(\.steps).max() ?? 0
     }
     
-    public var steps: Steps {
-        {
-            { list, max in
-                .init(values: list.map {
-                    max > 0 ? .init($0) / max : 0
-                }, max: Int(max))
-            } ($0, Double($0.max() ?? 0))
-        } (walks.suffix(Constants.steps.max).map(\.steps))
+    public var maxMetres: Int {
+        walks.map(\.metres).max() ?? 0
+    }
+    
+    public var steps: Chart {
+        walks.suffix(Constants.chart.max).map(\.steps).chart
+    }
+    
+    public var metres: Chart {
+        walks.suffix(Constants.chart.max).map(\.metres).chart
     }
     
     public var data: Data {
@@ -107,14 +109,14 @@ public struct Archive: Comparable, Archivable {
         save()
     }
     
-    public mutating func end(steps: Int = 0, meters: Int = 0, tiles: Set<Int> = []) {
+    public mutating func end(steps: Int = 0, metres: Int = 0, tiles: Set<Int> = []) {
         guard
             case let .walking(duration) = status,
             duration > 0
         else { return }
         
         walks = walks.mutating(index: walks.count - 1) {
-            $0.end(steps: steps, meters: meters)
+            $0.end(steps: steps, metres: metres)
         }
         
         self.tiles = tiles.reduce(into: self.tiles) {

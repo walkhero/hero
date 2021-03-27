@@ -24,7 +24,7 @@ final class StepsTests: XCTestCase {
         XCTAssertEqual(5, archive.maxSteps)
     }
     
-    func testStepsMax10() {
+    func testStepsMax20() {
         archive.walks = [
             .init(date: .init(), duration: 1, steps: 3),
             .init(date: .init(), duration: 1, steps: 4),

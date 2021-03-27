@@ -12,7 +12,7 @@ struct Constants {
         }
     }
     
-    struct steps {
+    struct chart {
         static let max = 20
     }
 }

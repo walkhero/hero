@@ -6,11 +6,11 @@ final class MapTests: XCTestCase {
     private let aberCastle = CLLocationCoordinate2D(latitude: 52.413244, longitude: -4.089675)
     private let deg1 = 110.574
     private let km11 = 0.1
-    private let meters11 = 0.0001
+    private let metres11 = 0.0001
     
     func testTilePer11m() {
         let start = MKMapPoint(aberCastle)
-        let end = MKMapPoint(.init(latitude: aberCastle.latitude + meters11, longitude: aberCastle.longitude))
+        let end = MKMapPoint(.init(latitude: aberCastle.latitude + metres11, longitude: aberCastle.longitude))
         let tileSize = MKMapRect.world.width / pow(2, Constants.map.zoom)
         let pointStart = MKMapPoint(x: floor(start.x / tileSize), y: floor(start.y / tileSize))
         let pointEnd = MKMapPoint(x: floor(end.x / tileSize), y: floor(end.y / tileSize))
