@@ -29,12 +29,11 @@ final class ArchiveTests: XCTestCase {
     
     func testWalks() {
         let start = Date(timeIntervalSinceNow: -500)
-        archive.walks = [.init(date: start, duration: 300, steps: 123, meters: 345, tiles: 75_000)]
+        archive.walks = [.init(date: start, duration: 300, steps: 123, meters: 345)]
         XCTAssertEqual(300, Int(archive.data.mutating(transform: Archive.init(data:)).walks.first!.duration))
         XCTAssertEqual(start.timestamp, archive.data.mutating(transform: Archive.init(data:)).walks.first!.date.timestamp)
         XCTAssertEqual(123, archive.data.mutating(transform: Archive.init(data:)).walks.first!.steps)
         XCTAssertEqual(345, archive.data.mutating(transform: Archive.init(data:)).walks.first!.meters)
-        XCTAssertEqual(75_000, archive.data.mutating(transform: Archive.init(data:)).walks.first!.tiles)
     }
     
     func testStart() {

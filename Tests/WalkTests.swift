@@ -5,7 +5,7 @@ final class WalkTests: XCTestCase {
     func testEnd() {
         XCTAssertEqual(100,
                        Int(Walk(date: .init(timeIntervalSinceNow: -100))
-                            .end(steps: 0, meters: 0, tiles: 0)
+                            .end(steps: 0, meters: 0)
                             .duration))
     }
     
@@ -13,7 +13,7 @@ final class WalkTests: XCTestCase {
         let start = Calendar.current.date(byAdding: .hour, value: -(Constants.walk.duration.max + 1), to: .init())!
         XCTAssertEqual(Int(start.timeIntervalSince(Calendar.current.date(byAdding: .hour, value: -Constants.walk.duration.fallback, to: start)!)),
                        Int(Walk(date: start)
-                            .end(steps: 0, meters: 0, tiles: 0)
+                            .end(steps: 0, meters: 0)
                             .duration))
     }
     
