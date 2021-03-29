@@ -4,7 +4,7 @@ import Archivable
 public struct Archive: Comparable, Archivable {
     var walks: [Walk]
     var challenges: Set<Challenge>
-    var tiles: Set<Int>
+    var tiles: Set<Tile>
     var date: Date
     
     public var status: Status {
@@ -69,10 +69,7 @@ public struct Archive: Comparable, Archivable {
             .adding(UInt8(walks.count))
             .adding(walks.flatMap(\.data))
             .adding(UInt32(tiles.count))
-            .adding(tiles.flatMap {
-                Data()
-                    .adding(UInt32($0))
-            })
+            .adding(tiles.flatMap(\.data))
     }
     
     public init() {
@@ -91,7 +88,7 @@ public struct Archive: Comparable, Archivable {
             .init(data: &data)
         }
         tiles = .init((0 ..< .init(data.uInt32())).map { _ in
-            .init(data.uInt32())
+            .init(data: &data)
         })
     }
     
@@ -109,7 +106,7 @@ public struct Archive: Comparable, Archivable {
         save()
     }
     
-    public mutating func end(steps: Int = 0, metres: Int = 0, tiles: Set<Int> = []) {
+    public mutating func end(steps: Int = 0, metres: Int = 0, tiles: Set<Tile> = []) {
         guard
             case let .walking(duration) = status,
             duration > 0

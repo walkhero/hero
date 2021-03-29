@@ -37,8 +37,8 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testTiles() {
-        archive.tiles = [2, 4, 1]
-        XCTAssertEqual([4, 1, 2], archive.data.mutating(transform: Archive.init(data:)).tiles)
+        archive.tiles = [.init(x: 2, y: 3), .init(x: 4, y: 4), .init(x: 1, y: 0)]
+        XCTAssertEqual([.init(x: 4, y: 4), .init(x: 2, y: 3), .init(x: 1, y: 0)], archive.data.mutating(transform: Archive.init(data:)).tiles)
     }
     
     func testStart() {
@@ -80,11 +80,11 @@ final class ArchiveTests: XCTestCase {
         Memory.shared.save.sink {
             XCTAssertEqual(3, $0.walks.last?.steps)
             XCTAssertEqual(4, $0.walks.last?.metres)
-            XCTAssertEqual([7, 2, 3, 5], $0.tiles)
+            XCTAssertEqual([.init(x: 7, y: 6), .init(x: 2, y: 2), .init(x: 3, y: 2), .init(x: 5, y: 0)], $0.tiles)
             expect.fulfill()
         }
         .store(in: &subs)
-        archive.end(steps: 3, metres: 4, tiles: [2, 5, 3, 7])
+        archive.end(steps: 3, metres: 4, tiles: [.init(x: 7, y: 6), .init(x: 5, y: 0), .init(x: 2, y: 2), .init(x: 3, y: 2)])
         waitForExpectations(timeout: 1)
     }
     
