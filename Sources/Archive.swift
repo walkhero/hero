@@ -116,9 +116,7 @@ public struct Archive: Comparable, Archivable {
             $0.end(steps: steps, metres: metres)
         }
         
-        self.tiles = tiles.reduce(into: self.tiles) {
-            $0.insert($1)
-        }
+        self.tiles = tiles
         
         save()
     }
