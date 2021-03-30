@@ -66,7 +66,7 @@ public struct Archive: Comparable, Archivable {
             .adding(date.timestamp)
             .adding(UInt8(challenges.count))
             .adding(challenges.flatMap(\.data))
-            .adding(UInt8(walks.count))
+            .adding(UInt32(walks.count))
             .adding(walks.flatMap(\.data))
             .adding(UInt32(tiles.count))
             .adding(tiles.flatMap(\.data))
@@ -84,7 +84,7 @@ public struct Archive: Comparable, Archivable {
         challenges = .init((0 ..< .init(data.removeFirst())).map { _ in
             .init(data: &data)
         })
-        walks = (0 ..< .init(data.removeFirst())).map { _ in
+        walks = (0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         }
         tiles = .init((0 ..< .init(data.uInt32())).map { _ in
