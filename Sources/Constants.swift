@@ -2,8 +2,11 @@ import MapKit
 
 struct Constants {
     struct map {
-        static let zoom = Double(20)
-        static let tile = MKMapRect.world.width / pow(2, zoom)
+        static let tile = with(zoom: 20)
+        
+        static func with(zoom: Int) -> Double {
+            MKMapRect.world.width / pow(2, .init(zoom))
+        }
     }
     
     struct walk {

@@ -1,5 +1,4 @@
 import Foundation
-import Archivable
 
 extension Array where Element == Bool {
     var dropLastIfFalse: Self {

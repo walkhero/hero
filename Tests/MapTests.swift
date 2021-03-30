@@ -11,7 +11,7 @@ final class MapTests: XCTestCase {
     func testTilePer11m() {
         let start = MKMapPoint(aberCastle)
         let end = MKMapPoint(.init(latitude: aberCastle.latitude + metres11, longitude: aberCastle.longitude))
-        let tileSize = MKMapRect.world.width / pow(2, Constants.map.zoom)
+        let tileSize = MKMapRect.world.width / pow(2, 20)
         let pointStart = MKMapPoint(x: floor(start.x / tileSize), y: floor(start.y / tileSize))
         let pointEnd = MKMapPoint(x: floor(end.x / tileSize), y: floor(end.y / tileSize))
         let total = (Int(abs(pointStart.x - pointEnd.x)) + 1) * (Int(abs(pointStart.y - pointEnd.y)) + 1)
@@ -21,7 +21,7 @@ final class MapTests: XCTestCase {
     func testTilesWithinUInt32() {
         let start = MKMapPoint(aberCastle)
         let end = MKMapPoint(.init(latitude: aberCastle.latitude + (km11 * 30), longitude: aberCastle.longitude + (km11 * 300)))
-        let tileSize = MKMapRect.world.width / pow(2, Constants.map.zoom)
+        let tileSize = MKMapRect.world.width / pow(2, 20)
         let pointStart = MKMapPoint(x: floor(start.x / tileSize), y: floor(start.y / tileSize))
         let pointEnd = MKMapPoint(x: floor(end.x / tileSize), y: floor(end.y / tileSize))
         let total = (Int(abs(pointStart.x - pointEnd.x)) + 1) * (Int(abs(pointStart.y - pointEnd.y)) + 1)
@@ -29,7 +29,7 @@ final class MapTests: XCTestCase {
     }
     
     func testTileIndexWithinUInt32() {
-        XCTAssertLessThan(pow(4, Constants.map.zoom / 2), 2_147_483_647)
+        XCTAssertLessThan(pow(4, 20 / 2), 2_147_483_647)
     }
     
     func testTile() {
