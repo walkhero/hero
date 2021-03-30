@@ -2,9 +2,9 @@ import Foundation
 import Archivable
 
 public struct Archive: Comparable, Archivable {
+    public internal(set) var tiles: Set<Tile>
     var walks: [Walk]
     var challenges: Set<Challenge>
-    var tiles: Set<Tile>
     var date: Date
     
     public var status: Status {
