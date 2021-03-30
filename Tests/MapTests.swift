@@ -31,4 +31,11 @@ final class MapTests: XCTestCase {
     func testTileIndexWithinUInt32() {
         XCTAssertLessThan(pow(4, Constants.map.zoom / 2), 2_147_483_647)
     }
+    
+    func testTile() {
+        let size = MKMapRect.world.width / pow(2, 20)
+        let point = MKMapPoint(aberCastle)
+        let tile = MKMapPoint(x: floor(point.x / size), y: floor(point.y / size))
+        XCTAssertEqual(Tile(x: .init(tile.x), y: .init(tile.y)), aberCastle.tile)
+    }
 }

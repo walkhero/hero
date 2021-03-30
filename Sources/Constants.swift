@@ -1,8 +1,9 @@
-import Foundation
+import MapKit
 
 struct Constants {
     struct map {
         static let zoom = Double(20)
+        static let tile = MKMapRect.world.width / pow(2, zoom)
     }
     
     struct walk {
