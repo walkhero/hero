@@ -2,7 +2,7 @@ import MapKit
 
 struct Constants {
     struct map {
-        static let zoom = Double(15)
+        static let zoom = Double(18)
         static let tile = MKMapRect.world.width / pow(2, zoom)
     }
     
