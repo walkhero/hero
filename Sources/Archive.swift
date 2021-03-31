@@ -76,7 +76,7 @@ public struct Archive: Comparable, Archivable {
         walks = []
         challenges = .init()
         tiles = .init()
-        date = .init()
+        date = .init(timeIntervalSince1970: 0)
     }
     
     public init(data: inout Data) {

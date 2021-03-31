@@ -13,7 +13,7 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testDate() {
-        let date0 = Date()
+        let date0 = Date(timeIntervalSince1970: 0)
         archive = .init()
         XCTAssertGreaterThanOrEqual(archive.data.mutating(transform: Archive.init(data:)).date.timestamp, date0.timestamp)
         let date1 = Date(timeIntervalSince1970: 1)
@@ -43,7 +43,6 @@ final class ArchiveTests: XCTestCase {
     
     func testStart() {
         let expect = expectation(description: "")
-        archive.date = .distantPast
         let date = Date()
         Memory.shared.save.sink {
             XCTAssertEqual(1, $0.walks.count)
@@ -59,7 +58,6 @@ final class ArchiveTests: XCTestCase {
     
     func testEnd() {
         let expect = expectation(description: "")
-        archive.date = .distantPast
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         let date = Date()
         Memory.shared.save.sink {
@@ -90,7 +88,6 @@ final class ArchiveTests: XCTestCase {
     
     func testCancel() {
         let expect = expectation(description: "")
-        archive.date = .distantPast
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         let date = Date()
         Memory.shared.save.sink {
@@ -105,7 +102,6 @@ final class ArchiveTests: XCTestCase {
     
     func testStartChallenge() {
         let expect = expectation(description: "")
-        archive.date = .distantPast
         let date = Date()
         Memory.shared.save.sink {
             XCTAssertTrue($0.enrolled(.map))
@@ -120,7 +116,6 @@ final class ArchiveTests: XCTestCase {
     
     func testStopChallenge() {
         let expect = expectation(description: "")
-        archive.date = .distantPast
         let date = Date()
         archive.start(.map)
         Memory.shared.save.sink {
