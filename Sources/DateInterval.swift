@@ -15,7 +15,7 @@ extension DateInterval {
     }
     
     func months<T>(year: Int, transform: (Int, Self) -> T) -> [T] {
-        (calendar.component(.month, from: start) ... calendar.component(.month, from: _end))
+        (calendar.component(.month, from: start) ... calendar.component(.month, from: end))
             .map {
                 transform($0, calendar.dateInterval(
                             of: .month,
