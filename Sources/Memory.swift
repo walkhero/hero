@@ -54,13 +54,19 @@ public final class Memory {
                 $1 == nil
             }
             .sink { [weak self] _, _ in
-                self?.container.accountStatus { status, _ in
+                self?.container.accountStatus { status, e in
                     if status == .available {
                         self?.container.fetchUserRecordID { user, _ in
                             user.map {
                                 self?.record.send(.init(recordName: "hero_" + $0.recordName))
                             }
                         }
+                    } else {
+                        print(e)
+                        print(status)
+                        print(status == .couldNotDetermine)
+                        print(status == .noAccount)
+                        print(status == .restricted)
                     }
                 }
             }.store(in: &subs)
