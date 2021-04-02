@@ -34,15 +34,7 @@ public struct Archive: Comparable, Archivable {
     }
     
     public var calendar: [Year] {
-        walks.dates { dates, interval in
-            interval.years { year, interval in
-                .init(value: year, months: interval.months(year: year) { month, interval in
-                    .init(value: month, days: interval.days(year: year, month: month) { day, date in
-                        .init(value: day, hit: dates.hits(date))
-                    })
-                })
-            }
-        }
+        walks.map(\.date).calendar
     }
     
     public var maxSteps: Int {
