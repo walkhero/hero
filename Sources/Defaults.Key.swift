@@ -4,6 +4,7 @@ public extension Defaults {
     enum Key: String {
         case
         rated,
-        created
+        created,
+        archive
     }
 }
