@@ -12,7 +12,7 @@ final class StreakTests: XCTestCase {
     
     func testEmpty() {
         XCTAssertEqual(.zero, archive.calendar.streak)
-        XCTAssertEqual([], archive.calendar)
+        XCTAssertNotNil(archive.calendar.first?.months.first?.days)
     }
     
     func testStreak() {

@@ -42,7 +42,7 @@ public struct Archive: Comparable, Archivable {
                     })
                 })
             }
-        } ?? []
+        }
     }
     
     public var maxSteps: Int {
