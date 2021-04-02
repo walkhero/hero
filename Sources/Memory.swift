@@ -69,7 +69,7 @@ public final class Memory {
             .compactMap { $0 }
             .combineLatest(pull)
             .removeDuplicates {
-                Calendar.current.dateComponents([.second], from: $0.1, to: $1.1).second! < 5
+                Calendar.current.dateComponents([.second], from: $0.1, to: $1.1).second! < 2
             }
             .sink { [weak self] id, _ in
                 let operation = CKFetchRecordsOperation(recordIDs: [id])
@@ -124,7 +124,6 @@ public final class Memory {
         record
             .compactMap { $0 }
             .combineLatest(push)
-            .debounce(for: .seconds(1), scheduler: queue)
             .sink { [weak self] id, _ in
                 let record = CKRecord(recordType: Self.type, recordID: id)
                 record[Self.asset] = CKAsset(fileURL: FileManager.url)
