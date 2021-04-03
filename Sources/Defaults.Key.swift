@@ -5,6 +5,7 @@ public extension Defaults {
         case
         rated,
         created,
+        plus,
         archive
     }
 }

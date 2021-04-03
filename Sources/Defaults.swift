@@ -22,6 +22,11 @@ public final class Defaults: UserDefaults {
         set { self[.created] = newValue }
     }
     
+    public class var plus: Bool {
+        get { self[.plus] as? Bool ?? false }
+        set { self[.plus] = newValue }
+    }
+    
     private class subscript(_ key: Key) -> Any? {
         get { standard.object(forKey: key.rawValue) }
         set { standard.setValue(newValue, forKey: key.rawValue) }
