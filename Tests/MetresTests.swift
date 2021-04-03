@@ -5,7 +5,7 @@ final class MetresTests: XCTestCase {
     private var archive: Archive!
     
     override func setUp() {
-        archive = .init()
+        archive = .new
         Memory.shared = .init()
         Memory.shared.subs = .init()
     }

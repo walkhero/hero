@@ -2,6 +2,7 @@ import Foundation
 import Archivable
 
 public struct Archive: Comparable, Archivable {
+    public static let new = Self()
     public internal(set) var tiles: Set<Tile>
     var walks: [Walk]
     var challenges: Set<Challenge>
@@ -64,7 +65,7 @@ public struct Archive: Comparable, Archivable {
             .adding(tiles.flatMap(\.data))
     }
     
-    public init() {
+    private init() {
         walks = []
         challenges = .init()
         tiles = .init()

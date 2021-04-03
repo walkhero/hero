@@ -7,14 +7,14 @@ final class ArchiveTests: XCTestCase {
     private var subs = Set<AnyCancellable>()
     
     override func setUp() {
-        archive = .init()
+        archive = .new
         Memory.shared = .init()
         Memory.shared.subs = .init()
     }
     
     func testDate() {
         let date0 = Date(timeIntervalSince1970: 0)
-        archive = .init()
+        archive = .new
         XCTAssertGreaterThanOrEqual(archive.data.mutating(transform: Archive.init(data:)).date.timestamp, date0.timestamp)
         let date1 = Date(timeIntervalSince1970: 1)
         archive.date = date1
