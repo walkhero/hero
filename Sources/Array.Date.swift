@@ -6,7 +6,7 @@ extension Array where Element == Date {
             interval.years { year, interval in
                 .init(value: year, months: interval.months(year: year) { month, interval in
                     .init(value: month, days: interval.days(year: year, month: month) { day, date in
-                        .init(value: day, hit: dates.hits(date))
+                        .init(value: day, today: Calendar.current.isDateInToday(date), hit: dates.hits(date))
                     })
                 })
             }
@@ -16,8 +16,8 @@ extension Array where Element == Date {
     private func ranges<T>(transform: (inout [Date], DateInterval) -> T) -> T {
         var array = self
         return {
-            transform(&array, .init(start: $0, end: .init()))
-        } (array.first ?? .init())
+            transform(&array, .init(start: array.first ?? $0, end: $0))
+        } (.init())
     }
     
     private mutating func hits(_ date: Date) -> Bool {
