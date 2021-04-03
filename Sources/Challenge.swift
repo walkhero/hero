@@ -1,7 +1,9 @@
 import Foundation
 import Archivable
 
-public enum Challenge: UInt8, CaseIterable, Archivable {
+public enum Challenge: UInt8, Identifiable, CaseIterable, Archivable {
+    public var id: Self { self }
+    
     case
     streak,
     steps,
