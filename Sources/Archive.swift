@@ -65,7 +65,7 @@ public struct Archive: Comparable, Archivable {
             .adding(tiles.flatMap(\.data))
     }
     
-    private init() {
+    init() {
         walks = []
         challenges = .init()
         tiles = .init()
