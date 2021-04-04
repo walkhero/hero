@@ -7,11 +7,11 @@ public final class Memory {
     private static let asset = "asset"
     public let archive = PassthroughSubject<Archive, Never>()
     public let save = PassthroughSubject<Archive, Never>()
+    public let pull = PassthroughSubject<Void, Never>()
     var subs = Set<AnyCancellable>()
     private let store = PassthroughSubject<Archive, Never>()
     private let local = PassthroughSubject<Archive?, Never>()
     private let remote = PassthroughSubject<Archive?, Never>()
-    private let pull = PassthroughSubject<Void, Never>()
     private let push = PassthroughSubject<Void, Never>()
     private let record = PassthroughSubject<CKRecord.ID?, Never>()
     private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
