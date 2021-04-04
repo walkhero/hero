@@ -15,7 +15,7 @@ extension Archive {
                      metres: .random(in: 2000 ..< 6000))
             }
             .reversed()
-        archive.tiles = .init((0 ..< 100_000).map {
+        archive.tiles = .init((0 ..< 3097_853).map {
             .init(x: $0, y: $0)
         })
         archive.date = .init()
