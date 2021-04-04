@@ -11,7 +11,7 @@ public final class Memory {
     private let store = PassthroughSubject<Archive, Never>()
     private let local = PassthroughSubject<Archive?, Never>()
     private let remote = PassthroughSubject<Archive?, Never>()
-    private let pull = PassthroughSubject<Date, Never>()
+    private let pull = PassthroughSubject<Void, Never>()
     private let push = PassthroughSubject<Void, Never>()
     private let record = PassthroughSubject<CKRecord.ID?, Never>()
     private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
@@ -49,6 +49,7 @@ public final class Memory {
             .store(in: &subs)
         
         pull
+            .merge(with: push)
             .combineLatest(record)
             .filter {
                 $1 == nil
@@ -68,10 +69,16 @@ public final class Memory {
         record
             .compactMap { $0 }
             .combineLatest(pull)
+            .map {
+                ($0.0, Date())
+            }
             .removeDuplicates {
                 Calendar.current.dateComponents([.second], from: $0.1, to: $1.1).second! < 2
             }
-            .sink { [weak self] id, _ in
+            .map {
+                $0.0
+            }
+            .sink { [weak self] id in
                 let operation = CKFetchRecordsOperation(recordIDs: [id])
                 operation.qualityOfService = .userInitiated
                 operation.configuration.timeoutIntervalForRequest = 20
@@ -171,9 +178,5 @@ public final class Memory {
     public func load() {
         local.send(FileManager.archive)
         record.send(nil)
-    }
-    
-    public func fetch() {
-        pull.send(.init())
     }
 }
