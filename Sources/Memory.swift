@@ -13,8 +13,8 @@ public final class Memory {
     private let local = PassthroughSubject<Archive?, Never>()
     private let remote = PassthroughSubject<Archive?, Never>()
     private let push = PassthroughSubject<Void, Never>()
-    private let record = PassthroughSubject<CKRecord.ID?, Never>()
     private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
+    private let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
     private let queue = DispatchQueue(label: "", qos: .utility)
     
     private var container: CKContainer {
@@ -39,9 +39,10 @@ public final class Memory {
                             .removeDuplicates())
             .scan(nil) { previous, next in
                 guard let previous = previous else { return next }
-                return next > previous ? next : nil
+                return next > previous ? next : previous
             }
             .compactMap { $0 }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.archive.send($0)
@@ -177,6 +178,5 @@ public final class Memory {
     
     public func load() {
         local.send(FileManager.archive)
-        record.send(nil)
     }
 }
