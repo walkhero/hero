@@ -5,6 +5,7 @@ public final class Memory {
     public static internal(set) var shared = Memory()
     private static let type = "Archive"
     private static let asset = "asset"
+    private static let container = CKContainer(identifier: "iCloud.WalkHero")
     public let archive = PassthroughSubject<Archive, Never>()
     public let save = PassthroughSubject<Archive, Never>()
     public let pull = PassthroughSubject<Void, Never>()
@@ -16,10 +17,6 @@ public final class Memory {
     private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
     private let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
     private let queue = DispatchQueue(label: "", qos: .utility)
-    
-    private var container: CKContainer {
-        .init(identifier: "iCloud.WalkHero")
-    }
     
     init() {
         save
@@ -56,9 +53,9 @@ public final class Memory {
                 $1 == nil
             }
             .sink { [weak self] _, _ in
-                self?.container.accountStatus { status, _ in
+                Self.container.accountStatus { status, _ in
                     if status == .available {
-                        self?.container.fetchUserRecordID { user, _ in
+                        Self.container.fetchUserRecordID { user, _ in
                             user.map {
                                 self?.record.send(.init(recordName: "hero_" + $0.recordName))
                             }
@@ -95,7 +92,7 @@ public final class Memory {
                         }
                     })
                 }
-                self?.container.publicCloudDatabase.add(operation)
+                Self.container.publicCloudDatabase.add(operation)
             }
             .store(in: &subs)
         
@@ -108,7 +105,7 @@ public final class Memory {
                     options: [.firesOnRecordUpdate])
                 subscription.notificationInfo = .init(alertLocalizationKey: "WalkHero")
                 
-                self?.container.publicCloudDatabase.save(subscription) { [weak self] subscription, _ in
+                Self.container.publicCloudDatabase.save(subscription) { [weak self] subscription, _ in
                     subscription.map {
                         self?.subscription.send($0.subscriptionID)
                     }
@@ -125,7 +122,7 @@ public final class Memory {
                 $0
             }
             .sink { [weak self] in
-                self?.container.publicCloudDatabase.delete(withSubscriptionID: $0) { _, _ in }
+                Self.container.publicCloudDatabase.delete(withSubscriptionID: $0) { _, _ in }
             }
             .store(in: &subs)
         
@@ -140,7 +137,7 @@ public final class Memory {
                 operation.configuration.timeoutIntervalForRequest = 20
                 operation.configuration.timeoutIntervalForResource = 20
                 operation.savePolicy = .allKeys
-                self?.container.publicCloudDatabase.add(operation)
+                Self.container.publicCloudDatabase.add(operation)
             }
             .store(in: &subs)
         
