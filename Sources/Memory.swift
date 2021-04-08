@@ -1,7 +1,7 @@
 import CloudKit
 import Combine
 
-public final class Memory {
+public struct Memory {
     public static internal(set) var shared = Memory()
     private static let type = "Archive"
     private static let asset = "asset"
