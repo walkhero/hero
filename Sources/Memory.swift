@@ -181,7 +181,7 @@ public struct Memory {
             var sub: AnyCancellable?
             sub = archive
                     .map { _ in }
-                    .timeout(.milliseconds(200), scheduler: queue)
+                    .timeout(.milliseconds(2), scheduler: queue)
                     .sink { _ in
                         sub?.cancel()
                         promise(.success(false))
