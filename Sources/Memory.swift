@@ -10,26 +10,31 @@ public final class Memory {
     public let save = PassthroughSubject<Archive, Never>()
     public let pull = PassthroughSubject<Void, Never>()
     var subs = Set<AnyCancellable>()
-    private let store = PassthroughSubject<Archive, Never>()
     private let local = PassthroughSubject<Archive?, Never>()
-    private let remote = PassthroughSubject<Archive?, Never>()
-    private let push = PassthroughSubject<Void, Never>()
-    private let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
-    private let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
-    private let queue = DispatchQueue(label: "", qos: .utility)
     
     init() {
-        save
+        let store = PassthroughSubject<Archive, Never>()
+        let remote = PassthroughSubject<Archive?, Never>()
+        let push = PassthroughSubject<Void, Never>()
+        let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
+        let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
+        let queue = DispatchQueue(label: "", qos: .utility)
+        
+        ;{
+            $0.subscribe(store)
+                .store(in: &subs)
+            $0.map { _ in }
+                .subscribe(push)
+                .store(in: &subs)
+        } (save
             .debounce(for: .seconds(1), scheduler: queue)
             .removeDuplicates()
-            .sink { [weak self] in
-                self?.store.send($0)
-                self?.push.send()
-            }
-            .store(in: &subs)
+            .share())
         
         local
-            .compactMap { $0 }
+            .compactMap {
+                $0
+            }
             .removeDuplicates()
             .merge(with: remote
                             .compactMap { $0 }
@@ -41,9 +46,7 @@ public final class Memory {
             .compactMap { $0 }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.archive.send($0)
-            }
+            .subscribe(archive)
             .store(in: &subs)
         
         pull
@@ -52,20 +55,24 @@ public final class Memory {
             .filter {
                 $1 == nil
             }
-            .sink { [weak self] _, _ in
+            .map { _, _ in }
+            .sink {
                 Self.container.accountStatus { status, _ in
                     if status == .available {
                         Self.container.fetchUserRecordID { user, _ in
                             user.map {
-                                self?.record.send(.init(recordName: "hero_" + $0.recordName))
+                                record.send(.init(recordName: "hero_" + $0.recordName))
                             }
                         }
                     }
                 }
-            }.store(in: &subs)
+            }
+            .store(in: &subs)
         
         record
-            .compactMap { $0 }
+            .compactMap {
+                $0
+            }
             .combineLatest(pull)
             .map {
                 ($0.0, Date())
@@ -76,13 +83,13 @@ public final class Memory {
             .map {
                 $0.0
             }
-            .sink { [weak self] id in
-                let operation = CKFetchRecordsOperation(recordIDs: [id])
+            .sink {
+                let operation = CKFetchRecordsOperation(recordIDs: [$0])
                 operation.qualityOfService = .userInitiated
                 operation.configuration.timeoutIntervalForRequest = 20
                 operation.configuration.timeoutIntervalForResource = 20
-                operation.fetchRecordsCompletionBlock = { [weak self] records, _ in
-                    self?.remote.send(records?.values.first.flatMap {
+                operation.fetchRecordsCompletionBlock = { records, _ in
+                    remote.send(records?.values.first.flatMap {
                         ($0[Self.asset] as? CKAsset).flatMap {
                             $0.fileURL.flatMap {
                                 (try? Data(contentsOf: $0)).map {
@@ -97,17 +104,19 @@ public final class Memory {
             .store(in: &subs)
         
         record
-            .compactMap { $0 }
-            .sink { [weak self] id in
-                let subscription = CKQuerySubscription(
+            .compactMap {
+                $0
+            }
+            .sink {
+                let query = CKQuerySubscription(
                     recordType: Self.type,
-                    predicate: .init(format: "recordID = %@", id),
+                    predicate: .init(format: "recordID = %@", $0),
                     options: [.firesOnRecordUpdate])
-                subscription.notificationInfo = .init(alertLocalizationKey: "WalkHero")
+                query.notificationInfo = .init(alertLocalizationKey: "WalkHero")
                 
-                Self.container.publicCloudDatabase.save(subscription) { [weak self] subscription, _ in
-                    subscription.map {
-                        self?.subscription.send($0.subscriptionID)
+                Self.container.publicCloudDatabase.save(query) { result, _ in
+                    result.map {
+                        subscription.send($0.subscriptionID)
                     }
                 }
             }
@@ -121,15 +130,17 @@ public final class Memory {
             .compactMap {
                 $0
             }
-            .sink { [weak self] in
+            .sink {
                 Self.container.publicCloudDatabase.delete(withSubscriptionID: $0) { _, _ in }
             }
             .store(in: &subs)
         
         record
-            .compactMap { $0 }
+            .compactMap {
+                $0
+            }
             .combineLatest(push)
-            .sink { [weak self] id, _ in
+            .sink { id, _ in
                 let record = CKRecord(recordType: Self.type, recordID: id)
                 record[Self.asset] = CKAsset(fileURL: FileManager.url)
                 let operation = CKModifyRecordsOperation(recordsToSave: [record])
@@ -143,23 +154,30 @@ public final class Memory {
         
         local
             .combineLatest(remote
-                            .compactMap { $0 }
+                            .compactMap {
+                                $0
+                            }
                             .removeDuplicates())
-            .filter { $0.0 == nil ? true : $0.0! < $0.1 }
-            .map { $1 }
-            .sink { [weak self] in
-                self?.store.send($0)
+            .filter {
+                $0.0 == nil ? true : $0.0! < $0.1
             }
+            .map {
+                $1
+            }
+            .subscribe(store)
             .store(in: &subs)
         
         remote
             .combineLatest(local
-                            .compactMap { $0 }
+                            .compactMap {
+                                $0
+                            }
                             .removeDuplicates())
-            .filter { $0.0 == nil ? true : $0.0! < $0.1 }
-            .sink { [weak self] _, _ in
-                self?.push.send()
+            .filter {
+                $0.0 == nil ? true : $0.0! < $0.1
             }
+            .map { _, _ in }
+            .subscribe(push)
             .store(in: &subs)
         
         store
