@@ -9,6 +9,7 @@ public struct Memory {
     public let pull = PassthroughSubject<Void, Never>()
     var subs = Set<AnyCancellable>()
     private let local = PassthroughSubject<Archive?, Never>()
+    private let queue = DispatchQueue(label: "", qos: .utility)
     
     init() {
         let store = PassthroughSubject<Archive, Never>()
@@ -16,7 +17,6 @@ public struct Memory {
         let push = PassthroughSubject<Void, Never>()
         let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
         let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
-        let queue = DispatchQueue(label: "", qos: .utility)
         let type = "Archive"
         let asset = "asset"
         
@@ -35,16 +35,11 @@ public struct Memory {
             .compactMap {
                 $0
             }
-            .removeDuplicates()
             .merge(with: remote
-                            .compactMap { $0 }
-                            .removeDuplicates())
-            .scan(nil) { previous, next in
-                guard let previous = previous else { return next }
-                return next > previous ? next : previous
+                            .compactMap { $0 })
+            .removeDuplicates {
+                $0 >= $1
             }
-            .compactMap { $0 }
-            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .subscribe(archive)
             .store(in: &subs)
@@ -122,19 +117,6 @@ public struct Memory {
             }
             .store(in: &subs)
         
-        subscription
-            .scan(nil) {
-                guard $0 != nil else { return nil }
-                return $1
-            }
-            .compactMap {
-                $0
-            }
-            .sink {
-                Self.container.publicCloudDatabase.delete(withSubscriptionID: $0) { _, _ in }
-            }
-            .store(in: &subs)
-        
         record
             .compactMap {
                 $0
@@ -182,13 +164,33 @@ public struct Memory {
         
         store
             .removeDuplicates {
-                $1 <= $0
+                $0 >= $1
             }
             .receive(on: queue)
             .sink {
                 FileManager.archive = $0
             }
             .store(in: &subs)
+    }
+    
+    public var pullAndWait: Future<Bool, Never> {
+        let archive = self.archive
+        let pull = self.pull
+        let queue = self.queue
+        return .init { promise in
+            var sub: AnyCancellable?
+            sub = archive
+                    .map { _ in }
+                    .timeout(.milliseconds(200), scheduler: queue)
+                    .sink { _ in
+                        sub?.cancel()
+                        promise(.success(false))
+                    } receiveValue: {
+                        sub?.cancel()
+                        promise(.success(true))
+                    }
+            pull.send()
+        }
     }
     
     public func load() {
