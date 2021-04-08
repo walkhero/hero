@@ -2,10 +2,8 @@ import CloudKit
 import Combine
 
 public struct Memory {
-    public static internal(set) var shared = Memory()
-    private static let type = "Archive"
-    private static let asset = "asset"
     private static let container = CKContainer(identifier: "iCloud.WalkHero")
+    public static internal(set) var shared = Memory()
     public let archive = PassthroughSubject<Archive, Never>()
     public let save = PassthroughSubject<Archive, Never>()
     public let pull = PassthroughSubject<Void, Never>()
@@ -19,6 +17,8 @@ public struct Memory {
         let subscription = PassthroughSubject<CKSubscription.ID?, Never>()
         let record = CurrentValueSubject<CKRecord.ID?, Never>(nil)
         let queue = DispatchQueue(label: "", qos: .utility)
+        let type = "Archive"
+        let asset = "asset"
         
         ;{
             $0.subscribe(store)
@@ -90,7 +90,7 @@ public struct Memory {
                 operation.configuration.timeoutIntervalForResource = 20
                 operation.fetchRecordsCompletionBlock = { records, _ in
                     remote.send(records?.values.first.flatMap {
-                        ($0[Self.asset] as? CKAsset).flatMap {
+                        ($0[asset] as? CKAsset).flatMap {
                             $0.fileURL.flatMap {
                                 (try? Data(contentsOf: $0)).map {
                                     $0.mutating(transform: Archive.init(data:))
@@ -109,7 +109,7 @@ public struct Memory {
             }
             .sink {
                 let query = CKQuerySubscription(
-                    recordType: Self.type,
+                    recordType: type,
                     predicate: .init(format: "recordID = %@", $0),
                     options: [.firesOnRecordUpdate])
                 query.notificationInfo = .init(alertLocalizationKey: "WalkHero")
@@ -141,8 +141,8 @@ public struct Memory {
             }
             .combineLatest(push)
             .sink { id, _ in
-                let record = CKRecord(recordType: Self.type, recordID: id)
-                record[Self.asset] = CKAsset(fileURL: FileManager.url)
+                let record = CKRecord(recordType: type, recordID: id)
+                record[asset] = CKAsset(fileURL: FileManager.url)
                 let operation = CKModifyRecordsOperation(recordsToSave: [record])
                 operation.qualityOfService = .userInitiated
                 operation.configuration.timeoutIntervalForRequest = 20
