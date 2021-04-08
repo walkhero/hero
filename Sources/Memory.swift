@@ -173,7 +173,7 @@ public struct Memory {
             .store(in: &subs)
     }
     
-    public var pullAndWait: Future<Bool, Never> {
+    public var receipt: Future<Bool, Never> {
         let archive = self.archive
         let pull = self.pull
         let queue = self.queue
