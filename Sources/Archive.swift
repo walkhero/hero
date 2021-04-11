@@ -1,12 +1,12 @@
 import Foundation
 import Archivable
 
-public struct Archive: Comparable, Archivable {
+public struct Archive: Archivable, Dateable {
     public static let new = Self()
     public internal(set) var tiles: Set<Tile>
+    public internal(set) var date: Date
     var walks: [Walk]
     var challenges: Set<Challenge>
-    var date: Date
     
     public var status: Status {
         walks.last.flatMap {
@@ -134,6 +134,6 @@ public struct Archive: Comparable, Archivable {
     
     private mutating func save() {
         date = .init()
-        Memory.shared.save.send(self)
+        Repository.save(self)
     }
 }

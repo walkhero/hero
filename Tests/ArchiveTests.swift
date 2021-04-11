@@ -8,8 +8,7 @@ final class ArchiveTests: XCTestCase {
     
     override func setUp() {
         archive = .new
-        Memory.shared = .init()
-        Memory.shared.subs = .init()
+        Repository.override = .init()
     }
     
     func testDate() {
@@ -44,7 +43,7 @@ final class ArchiveTests: XCTestCase {
     func testStart() {
         let expect = expectation(description: "")
         let date = Date()
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertEqual(1, $0.walks.count)
             XCTAssertEqual(0, $0.walks.first?.duration)
             XCTAssertGreaterThanOrEqual($0.walks.first!.date.timestamp, date.timestamp)
@@ -60,7 +59,7 @@ final class ArchiveTests: XCTestCase {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         let date = Date()
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertEqual(1, $0.walks.count)
             XCTAssertEqual(10, Int($0.walks.first!.duration))
             XCTAssertEqual(Date(timeIntervalSinceNow: -10).timestamp, $0.walks.first!.date.timestamp)
@@ -75,7 +74,7 @@ final class ArchiveTests: XCTestCase {
     func testEndWithData() {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertEqual(3, $0.walks.last?.steps)
             XCTAssertEqual(4, $0.walks.last?.metres)
             XCTAssertEqual([.init(x: 7, y: 6), .init(x: 2, y: 2), .init(x: 3, y: 2), .init(x: 5, y: 0)], $0.tiles)
@@ -90,7 +89,7 @@ final class ArchiveTests: XCTestCase {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         let date = Date()
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertTrue($0.walks.isEmpty)
             XCTAssertGreaterThanOrEqual($0.date.timestamp, date.timestamp)
             expect.fulfill()
@@ -103,7 +102,7 @@ final class ArchiveTests: XCTestCase {
     func testStartChallenge() {
         let expect = expectation(description: "")
         let date = Date()
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertTrue($0.enrolled(.map))
             XCTAssertGreaterThanOrEqual($0.date.timestamp, date.timestamp)
             expect.fulfill()
@@ -118,7 +117,7 @@ final class ArchiveTests: XCTestCase {
         let expect = expectation(description: "")
         let date = Date()
         archive.start(.map)
-        Memory.shared.save.sink {
+        Repository.override!.sink {
             XCTAssertFalse($0.enrolled(.map))
             XCTAssertGreaterThanOrEqual($0.date.timestamp, date.timestamp)
             expect.fulfill()
