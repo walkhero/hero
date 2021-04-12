@@ -4,11 +4,6 @@ import Archivable
 public struct Archive: Archivable, Dateable {
     public static let new = Self()
     public internal(set) var date: Date
-    
-    public var tiles: Set<Tile> {
-        area.union(discover)
-    }
-    
     var walks: [Walk]
     var challenges: Set<Challenge>
     var area: Set<Tile>
@@ -60,6 +55,10 @@ public struct Archive: Archivable, Dateable {
         walks.suffix(Constants.chart.max).map(\.metres).chart
     }
     
+    public var tiles: Set<Tile> {
+        area.union(discover)
+    }
+    
     public var data: Data {
         Data()
             .adding(date.timestamp)
@@ -69,6 +68,8 @@ public struct Archive: Archivable, Dateable {
             .adding(walks.flatMap(\.data))
             .adding(UInt32(area.count))
             .adding(area.flatMap(\.data))
+            .adding(UInt16(discover.count))
+            .adding(discover.flatMap(\.data))
     }
     
     init() {
@@ -90,7 +91,9 @@ public struct Archive: Archivable, Dateable {
         area = .init((0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         })
-        discover = .init()
+        discover = .init((0 ..< .init(data.uInt16())).map { _ in
+            .init(data: &data)
+        })
     }
     
     public mutating func start() {
@@ -103,6 +106,7 @@ public struct Archive: Archivable, Dateable {
     public mutating func cancel() {
         guard case .walking = status else { return }
         
+        discover = []
         walks.removeLast()
         save()
     }
@@ -112,7 +116,7 @@ public struct Archive: Archivable, Dateable {
         save()
     }
     
-    public mutating func end(steps: Int = 0, metres: Int = 0, tiles: Set<Tile> = []) {
+    public mutating func end(steps: Int = 0, metres: Int = 0) {
         guard
             case let .walking(duration) = status,
             duration > 0
@@ -122,9 +126,8 @@ public struct Archive: Archivable, Dateable {
             $0.end(steps: steps, metres: metres)
         }
         
-        tiles.forEach {
-            self.area.insert($0)
-        }
+        area.formUnion(discover)
+        discover = []
         
         save()
     }

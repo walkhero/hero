@@ -38,6 +38,9 @@ final class ArchiveTests: XCTestCase {
     func testTiles() {
         archive.area = [.init(x: 2, y: 3), .init(x: 4, y: 4), .init(x: 1, y: 0)]
         XCTAssertEqual([.init(x: 4, y: 4), .init(x: 2, y: 3), .init(x: 1, y: 0)], archive.data.mutating(transform: Archive.init(data:)).area)
+        
+        archive.discover = [.init(x: 2, y: 3), .init(x: 4, y: 4), .init(x: 1, y: 0)]
+        XCTAssertEqual([.init(x: 4, y: 4), .init(x: 2, y: 3), .init(x: 1, y: 0)], archive.data.mutating(transform: Archive.init(data:)).discover)
     }
     
     func testStart() {
@@ -75,14 +78,16 @@ final class ArchiveTests: XCTestCase {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         archive.area = [.init(x: 7, y: 6), .init(x: 6, y: 7)]
+        archive.discover = [.init(x: 7, y: 6), .init(x: 5, y: 0), .init(x: 2, y: 2), .init(x: 3, y: 2)]
         Repository.override!.sink {
             XCTAssertEqual(3, $0.walks.last?.steps)
             XCTAssertEqual(4, $0.walks.last?.metres)
+            XCTAssertTrue($0.discover.isEmpty)
             XCTAssertEqual([.init(x: 7, y: 6), .init(x: 6, y: 7), .init(x: 2, y: 2), .init(x: 3, y: 2), .init(x: 5, y: 0)], $0.area)
             expect.fulfill()
         }
         .store(in: &subs)
-        archive.end(steps: 3, metres: 4, tiles: [.init(x: 7, y: 6), .init(x: 5, y: 0), .init(x: 2, y: 2), .init(x: 3, y: 2)])
+        archive.end(steps: 3, metres: 4)
         waitForExpectations(timeout: 1)
     }
     
@@ -90,8 +95,10 @@ final class ArchiveTests: XCTestCase {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
         let date = Date()
+        archive.discover(.init(x: 1, y: 2))
         Repository.override!.sink {
             XCTAssertTrue($0.walks.isEmpty)
+            XCTAssertTrue($0.tiles.isEmpty)
             XCTAssertGreaterThanOrEqual($0.date.timestamp, date.timestamp)
             expect.fulfill()
         }
