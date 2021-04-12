@@ -112,6 +112,10 @@ public struct Archive: Archivable, Dateable {
     }
     
     public mutating func discover(_ tile: Tile) {
+        guard
+            !area.contains(tile),
+            !discover.contains(tile)
+        else { return }
         discover.insert(tile)
         save()
     }

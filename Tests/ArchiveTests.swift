@@ -193,4 +193,15 @@ final class ArchiveTests: XCTestCase {
         archive.discover(.init(x: 5, y: 0))
         waitForExpectations(timeout: 1)
     }
+    
+    func testNotSaveIfExisting() {
+        archive.area = [.init(x: 5, y: 0)]
+        archive.discover = [.init(x: 3, y: 1)]
+        Repository.override!.sink { _ in
+            XCTFail()
+        }
+        .store(in: &subs)
+        archive.discover(.init(x: 5, y: 0))
+        archive.discover(.init(x: 3, y: 1))
+    }
 }
