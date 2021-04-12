@@ -3,10 +3,16 @@ import Archivable
 
 public struct Archive: Archivable, Dateable {
     public static let new = Self()
-    public internal(set) var tiles: Set<Tile>
     public internal(set) var date: Date
+    
+    public var tiles: Set<Tile> {
+        area.union(discover)
+    }
+    
     var walks: [Walk]
     var challenges: Set<Challenge>
+    var area: Set<Tile>
+    var discover: Set<Tile>
     
     public var status: Status {
         walks.last.flatMap {
@@ -61,14 +67,15 @@ public struct Archive: Archivable, Dateable {
             .adding(challenges.flatMap(\.data))
             .adding(UInt32(walks.count))
             .adding(walks.flatMap(\.data))
-            .adding(UInt32(tiles.count))
-            .adding(tiles.flatMap(\.data))
+            .adding(UInt32(area.count))
+            .adding(area.flatMap(\.data))
     }
     
     init() {
         walks = []
         challenges = .init()
-        tiles = .init()
+        area = .init()
+        discover = .init()
         date = .init(timeIntervalSince1970: 0)
     }
     
@@ -80,9 +87,10 @@ public struct Archive: Archivable, Dateable {
         walks = (0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         }
-        tiles = .init((0 ..< .init(data.uInt32())).map { _ in
+        area = .init((0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         })
+        discover = .init()
     }
     
     public mutating func start() {
@@ -99,6 +107,11 @@ public struct Archive: Archivable, Dateable {
         save()
     }
     
+    public mutating func discover(_ tile: Tile) {
+        discover.insert(tile)
+        save()
+    }
+    
     public mutating func end(steps: Int = 0, metres: Int = 0, tiles: Set<Tile> = []) {
         guard
             case let .walking(duration) = status,
@@ -110,7 +123,7 @@ public struct Archive: Archivable, Dateable {
         }
         
         tiles.forEach {
-            self.tiles.insert($0)
+            self.area.insert($0)
         }
         
         save()
