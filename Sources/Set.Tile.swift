@@ -1,10 +1,12 @@
-import Foundation
+import MapKit
 
 extension Set where Element == Tile {
-    public func with(zoom: Int) -> Self {
-        .init(map {
-            .init(x: .init(.init($0.x) * Constants.map.tile / Constants.map.with(zoom: zoom)),
-                  y: .init(.init($0.y) * Constants.map.tile / Constants.map.with(zoom: zoom)))
-        })
+    private static let world = [MKMapPoint(),
+                                .init(x: MKMapSize.world.width, y: 0),
+                                .init(x: MKMapSize.world.width, y: MKMapSize.world.height),
+                                .init(x: 0, y: MKMapSize.world.height)]
+    
+    var overlay: MKPolygon {
+        .init(points: Self.world, count: 4, interiorPolygons: map(\.polygon))
     }
 }

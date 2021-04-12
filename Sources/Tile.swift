@@ -1,4 +1,4 @@
-import Foundation
+import MapKit
 import Archivable
 
 public struct Tile: Archivable, Hashable {
@@ -19,5 +19,15 @@ public struct Tile: Archivable, Hashable {
     init(x: Int, y: Int) {
         self.x = x
         self.y = y
+    }
+    
+    var polygon: MKPolygon {
+        { x, y in
+            .init(points: [.init(x: x, y: y),
+                           .init(x: x + Constants.map.tile, y: y),
+                           .init(x: x + Constants.map.tile, y: y + Constants.map.tile),
+                           .init(x: x, y: y + Constants.map.tile)],
+                  count: 4)
+        } (.init(x) * Constants.map.tile, .init(y) * Constants.map.tile)
     }
 }
