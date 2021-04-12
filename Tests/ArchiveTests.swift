@@ -74,10 +74,11 @@ final class ArchiveTests: XCTestCase {
     func testEndWithData() {
         let expect = expectation(description: "")
         archive.walks = [.init(date: .init(timeIntervalSinceNow: -10))]
+        archive.tiles = [.init(x: 7, y: 6), .init(x: 6, y: 7)]
         Repository.override!.sink {
             XCTAssertEqual(3, $0.walks.last?.steps)
             XCTAssertEqual(4, $0.walks.last?.metres)
-            XCTAssertEqual([.init(x: 7, y: 6), .init(x: 2, y: 2), .init(x: 3, y: 2), .init(x: 5, y: 0)], $0.tiles)
+            XCTAssertEqual([.init(x: 7, y: 6), .init(x: 6, y: 7), .init(x: 2, y: 2), .init(x: 3, y: 2), .init(x: 5, y: 0)], $0.tiles)
             expect.fulfill()
         }
         .store(in: &subs)

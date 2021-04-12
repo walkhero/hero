@@ -109,7 +109,9 @@ public struct Archive: Archivable, Dateable {
             $0.end(steps: steps, metres: metres)
         }
         
-        self.tiles = tiles
+        tiles.forEach {
+            self.tiles.insert($0)
+        }
         
         save()
     }
