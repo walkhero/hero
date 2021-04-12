@@ -21,13 +21,17 @@ public struct Tile: Archivable, Hashable {
         self.y = y
     }
     
-    var polygon: MKPolygon {
-        { x, y in
-            .init(points: [.init(x: x, y: y),
-                           .init(x: x + Constants.map.tile, y: y),
-                           .init(x: x + Constants.map.tile, y: y + Constants.map.tile),
-                           .init(x: x, y: y + Constants.map.tile)],
-                  count: 4)
-        } (.init(x) * Constants.map.tile, .init(y) * Constants.map.tile)
-    }
+    #if os(iOS) || os(macOS)
+    
+        var polygon: MKPolygon {
+            { x, y in
+                .init(points: [.init(x: x, y: y),
+                               .init(x: x + Constants.map.tile, y: y),
+                               .init(x: x + Constants.map.tile, y: y + Constants.map.tile),
+                               .init(x: x, y: y + Constants.map.tile)],
+                      count: 4)
+            } (.init(x) * Constants.map.tile, .init(y) * Constants.map.tile)
+        }
+    
+    #endif
 }

@@ -1,3 +1,5 @@
+#if os(iOS) || os(macOS)
+
 import MapKit
 
 extension Set where Element == Tile {
@@ -6,7 +8,9 @@ extension Set where Element == Tile {
                                 .init(x: MKMapSize.world.width, y: MKMapSize.world.height),
                                 .init(x: 0, y: MKMapSize.world.height)]
     
-    var overlay: MKPolygon {
+    public var overlay: MKPolygon {
         .init(points: Self.world, count: 4, interiorPolygons: map(\.polygon))
     }
 }
+
+#endif
