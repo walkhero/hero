@@ -83,4 +83,13 @@ final class StepsTests: XCTestCase {
                         0], archive.steps.values)
         XCTAssertEqual(0, archive.steps.max)
     }
+    
+    func testAverage() {
+        archive.walks.append(.init(date: .init(), steps: 1))
+        XCTAssertEqual(1, archive.steps.average)
+        archive.walks.append(.init(date: .init(), steps: 5))
+        XCTAssertEqual(3, archive.steps.average)
+        archive.walks.append(.init(date: .init(), steps: 3))
+        XCTAssertEqual(3, archive.steps.average)
+    }
 }
