@@ -15,6 +15,10 @@ public enum Challenge: UInt8, Identifiable, CaseIterable, Archivable {
             .adding(rawValue)
     }
     
+    var string: String {
+        "\(rawValue)"
+    }
+    
     public init(data: inout Data) {
         self.init(rawValue: data.removeFirst())!
     }
