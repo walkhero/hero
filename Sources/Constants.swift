@@ -1,6 +1,6 @@
 import MapKit
 
-struct Constants {
+public struct Constants {
     struct map {
         static let tile = MKMapRect.world.width / pow(2, 20)
     }
@@ -12,7 +12,7 @@ struct Constants {
         }
     }
     
-    struct chart {
-        static let max = 20
+    public struct chart {
+        public static let max = 20
     }
 }
