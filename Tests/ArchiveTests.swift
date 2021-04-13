@@ -171,13 +171,13 @@ final class ArchiveTests: XCTestCase {
             .init(date: date1, duration: 500),
             .init(date: date2, duration: 50)]
         let list = archive.list
-        XCTAssertEqual(date2, list[0].date)
+        XCTAssertEqual(date2.addingTimeInterval(50), list[0].date)
         XCTAssertEqual(50, list[0].duration)
         XCTAssertEqual(0.1, list[0].percent)
-        XCTAssertEqual(date1, list[1].date)
+        XCTAssertEqual(date1.addingTimeInterval(500), list[1].date)
         XCTAssertEqual(500, list[1].duration)
         XCTAssertEqual(1, list[1].percent)
-        XCTAssertEqual(date0, list[2].date)
+        XCTAssertEqual(date0.addingTimeInterval(100), list[2].date)
         XCTAssertEqual(100, list[2].duration)
         XCTAssertEqual(0.2, list[2].percent)
     }

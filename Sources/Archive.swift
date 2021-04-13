@@ -30,7 +30,7 @@ public struct Archive: Archivable, Dateable {
             .max()
             .map { duration in
                 walks.map {
-                    .init(date: $0.date, duration: $0.duration, percent: $0.duration / duration)
+                    .init(date: $0.date.addingTimeInterval($0.duration), duration: $0.duration, percent: $0.duration / duration)
                 }
             }?.reversed() ?? []
     }
