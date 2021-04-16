@@ -38,9 +38,6 @@ final class ArchiveTests: XCTestCase {
     func testTiles() {
         archive.area = [.init(x: 2, y: 3), .init(x: 4, y: 4), .init(x: 1, y: 0)]
         XCTAssertEqual([.init(x: 4, y: 4), .init(x: 2, y: 3), .init(x: 1, y: 0)], archive.data.mutating(transform: Archive.init(data:)).area)
-        
-        archive.discover = [.init(x: 2, y: 3), .init(x: 4, y: 4), .init(x: 1, y: 0)]
-        XCTAssertEqual([.init(x: 4, y: 4), .init(x: 2, y: 3), .init(x: 1, y: 0)], archive.data.mutating(transform: Archive.init(data:)).discover)
     }
     
     func testStart() {
@@ -183,25 +180,11 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testDiscover() {
-        let expect = expectation(description: "")
         archive.area = [.init(x: 7, y: 6), .init(x: 6, y: 7)]
-        Repository.override!.sink {
-            XCTAssertEqual([.init(x: 7, y: 6), .init(x: 6, y: 7), .init(x: 5, y: 0)], $0.tiles)
-            expect.fulfill()
-        }
-        .store(in: &subs)
-        archive.discover(.init(x: 5, y: 0))
-        waitForExpectations(timeout: 1)
-    }
-    
-    func testNotSaveIfExisting() {
-        archive.area = [.init(x: 5, y: 0)]
-        archive.discover = [.init(x: 3, y: 1)]
         Repository.override!.sink { _ in
             XCTFail()
         }
         .store(in: &subs)
         archive.discover(.init(x: 5, y: 0))
-        archive.discover(.init(x: 3, y: 1))
     }
 }

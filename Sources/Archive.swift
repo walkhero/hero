@@ -7,7 +7,7 @@ public struct Archive: Archivable, Dateable {
     var walks: [Walk]
     var challenges: Set<Challenge>
     var area: Set<Tile>
-    var discover: Set<Tile>
+    var discover = Set<Tile>()
     
     public var status: Status {
         walks.last.flatMap {
@@ -68,15 +68,12 @@ public struct Archive: Archivable, Dateable {
             .adding(walks.flatMap(\.data))
             .adding(UInt32(area.count))
             .adding(area.flatMap(\.data))
-            .adding(UInt16(discover.count))
-            .adding(discover.flatMap(\.data))
     }
     
     init() {
         walks = []
         challenges = .init()
         area = .init()
-        discover = .init()
         date = .init(timeIntervalSince1970: 0)
     }
     
@@ -89,9 +86,6 @@ public struct Archive: Archivable, Dateable {
             .init(data: &data)
         }
         area = .init((0 ..< .init(data.uInt32())).map { _ in
-            .init(data: &data)
-        })
-        discover = .init((0 ..< .init(data.uInt16())).map { _ in
             .init(data: &data)
         })
     }
@@ -117,7 +111,6 @@ public struct Archive: Archivable, Dateable {
             !discover.contains(tile)
         else { return }
         discover.insert(tile)
-        save()
     }
     
     public mutating func end(steps: Int = 0, metres: Int = 0) {
