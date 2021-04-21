@@ -27,7 +27,7 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testFinish() {
-        let finish = Finish(duration: 34, streak: 12, steps: 43, distance: 543, map: 45)
+        let finish = Finish(duration: 34, streak: 12, steps: 43, metres: 543, area: 45)
         archive.finish = finish
         XCTAssertEqual(finish, archive.data.mutating(transform: Archive.init(data:)).finish)
     }
@@ -73,7 +73,7 @@ final class ArchiveTests: XCTestCase {
             expect.fulfill()
         }
         .store(in: &subs)
-        archive.end()
+        archive.finish()
         waitForExpectations(timeout: 1)
     }
 
@@ -83,6 +83,7 @@ final class ArchiveTests: XCTestCase {
         archive.area = [.init(x: 7, y: 6), .init(x: 6, y: 7)]
         archive.discover = [.init(x: 7, y: 6), .init(x: 5, y: 0), .init(x: 2, y: 2), .init(x: 3, y: 2)]
         Repository.override!.sink {
+            
             XCTAssertEqual(3, $0.walks.last?.steps)
             XCTAssertEqual(4, $0.walks.last?.metres)
             XCTAssertTrue($0.discover.isEmpty)
@@ -90,7 +91,27 @@ final class ArchiveTests: XCTestCase {
             expect.fulfill()
         }
         .store(in: &subs)
-        archive.end(steps: 3, metres: 4)
+        archive.finish(steps: 3, metres: 4)
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testEndFinish() {
+        let expect = expectation(description: "")
+        archive.walks = [.init(date: Calendar.current.date(byAdding: .day, value: -1, to: .init())!),
+                         .init(date: .init(timeIntervalSinceNow: -10))]
+        archive.area = [.init(x: 7, y: 6), .init(x: 6, y: 7)]
+        archive.discover = [.init(x: 7, y: 6), .init(x: 5, y: 0), .init(x: 2, y: 2), .init(x: 3, y: 2)]
+        Repository.override!.sink {
+            XCTAssertEqual(10, Int($0.finish.duration))
+            XCTAssertEqual(2, $0.finish.streak)
+            XCTAssertEqual(3, $0.finish.steps)
+            XCTAssertEqual(4, $0.finish.metres)
+            XCTAssertEqual(5, $0.finish.area)
+            XCTAssertTrue($0.finish.publish)
+            expect.fulfill()
+        }
+        .store(in: &subs)
+        archive.finish(steps: 3, metres: 4)
         waitForExpectations(timeout: 1)
     }
     
@@ -144,7 +165,7 @@ final class ArchiveTests: XCTestCase {
             archive.start()
             if case let .walking(time) = archive.status {
                 XCTAssertGreaterThan(time, 0)
-                archive.end()
+                archive.finish()
                 if case .none = archive.status {
                     
                 } else {

@@ -4,7 +4,7 @@ import Archivable
 public struct Archive: Archived {
     public static let new = Self()
     public internal(set) var date: Date
-    var finish: Finish
+    public internal(set) var finish: Finish
     var walks: [Walk]
     var challenges: Set<Challenge>
     var area: Set<Tile>
@@ -109,6 +109,12 @@ public struct Archive: Archived {
         save()
     }
     
+    public mutating func publish() {
+        guard finish.publish else { return }
+        finish = .new
+        save()
+    }
+    
     public mutating func discover(_ tile: Tile) {
         guard
             !area.contains(tile),
@@ -117,7 +123,7 @@ public struct Archive: Archived {
         discover.insert(tile)
     }
     
-    public mutating func end(steps: Int = 0, metres: Int = 0) {
+    public mutating func finish(steps: Int = 0, metres: Int = 0) {
         guard
             case let .walking(duration) = status,
             duration > 0
@@ -129,6 +135,11 @@ public struct Archive: Archived {
         
         area.formUnion(discover)
         discover = []
+        finish = .init(duration: duration,
+                       streak: max(calendar.streak.current, finish.streak),
+                       steps: max(steps, finish.steps),
+                       metres: max(metres, finish.metres),
+                       area: max(area.count, finish.area))
         
         save()
     }

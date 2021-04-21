@@ -2,14 +2,14 @@ import Foundation
 import Archivable
 
 public struct Finish: Equatable, Archiving {
-    static let new = Self(duration: 0, streak: 0, steps: 0, distance: 0, map: 0)
+    static let new = Self(publish: false)
     
     public let duration: TimeInterval
     public let streak: Int
     public let steps: Int
     public let metres: Int
-    public let map: Int
-    public let published: Bool
+    public let area: Int
+    public let publish: Bool
     
     public var data: Data {
         Data()
@@ -17,8 +17,8 @@ public struct Finish: Equatable, Archiving {
             .adding(UInt16(streak))
             .adding(UInt16(steps))
             .adding(UInt16(metres))
-            .adding(UInt32(map))
-            .adding(published)
+            .adding(UInt32(area))
+            .adding(publish)
     }
     
     public init(data: inout Data) {
@@ -26,16 +26,16 @@ public struct Finish: Equatable, Archiving {
         streak = .init(data.uInt16())
         steps = .init(data.uInt16())
         metres = .init(data.uInt16())
-        map = .init(data.uInt32())
-        published = data.bool()
+        area = .init(data.uInt32())
+        publish = data.bool()
     }
     
-    init(duration: TimeInterval, streak: Int, steps: Int, distance: Int, map: Int) {
+    init(duration: TimeInterval = 0, streak: Int = 0, steps: Int = 0, metres: Int = 0, area: Int = 0, publish: Bool = true) {
         self.duration = duration
         self.streak = streak
         self.steps = steps
-        self.metres = distance
-        self.map = map
-        self.published = false
+        self.metres = metres
+        self.area = area
+        self.publish = publish
     }
 }
