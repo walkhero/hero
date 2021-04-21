@@ -26,6 +26,12 @@ final class ArchiveTests: XCTestCase {
         XCTAssertEqual([.map, .steps], archive.data.mutating(transform: Archive.init(data:)).challenges)
     }
     
+    func testFinish() {
+        let finish = Finish(duration: 34, streak: 12, steps: 43, distance: 543, map: 45)
+        archive.finish = finish
+        XCTAssertEqual(finish, archive.data.mutating(transform: Archive.init(data:)).finish)
+    }
+    
     func testWalks() {
         let start = Date(timeIntervalSinceNow: -500)
         archive.walks = [.init(date: start, duration: 300, steps: 123, metres: 345)]

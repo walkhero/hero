@@ -4,6 +4,7 @@ import Archivable
 public struct Archive: Archived {
     public static let new = Self()
     public internal(set) var date: Date
+    var finish: Finish
     var walks: [Walk]
     var challenges: Set<Challenge>
     var area: Set<Tile>
@@ -68,6 +69,7 @@ public struct Archive: Archived {
             .adding(walks.flatMap(\.data))
             .adding(UInt32(area.count))
             .adding(area.flatMap(\.data))
+            .adding(finish.data)
     }
     
     init() {
@@ -75,6 +77,7 @@ public struct Archive: Archived {
         challenges = .init()
         area = .init()
         date = .init(timeIntervalSince1970: 0)
+        finish = .new
     }
     
     public init(data: inout Data) {
@@ -88,6 +91,7 @@ public struct Archive: Archived {
         area = .init((0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         })
+        finish = data.isEmpty ? .new : .init(data: &data)
     }
     
     public mutating func start() {
