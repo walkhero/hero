@@ -1,7 +1,7 @@
 import Foundation
 import Archivable
 
-public struct Walk: Equatable, Archiving {
+public struct Walk: Equatable, Property {
     let date: Date
     let duration: TimeInterval
     let steps: Int

@@ -1,7 +1,7 @@
 import Foundation
 import Archivable
 
-public struct Finish: Equatable, Archiving {
+public struct Finish: Equatable, Property {
     static let new = Self(publish: false)
     
     public let duration: TimeInterval

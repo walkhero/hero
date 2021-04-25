@@ -1,7 +1,7 @@
 import MapKit
 import Archivable
 
-public struct Tile: Archiving, Hashable {
+public struct Tile: Hashable, Property {
     public let x: Int
     public let y: Int
     

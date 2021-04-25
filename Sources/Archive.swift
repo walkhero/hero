@@ -158,10 +158,6 @@ public struct Archive: Archived {
         challenges.contains(challenge)
     }
     
-    public static func < (lhs: Archive, rhs: Archive) -> Bool {
-        lhs.date < rhs.date
-    }
-    
     private mutating func save() {
         date = .init()
         Repository.save(self)

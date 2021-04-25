@@ -1,7 +1,7 @@
 import Foundation
 import Archivable
 
-public enum Challenge: UInt8, Identifiable, CaseIterable, Archiving {
+public enum Challenge: UInt8, Identifiable, CaseIterable, Property {
     public var id: Self { self }
     
     case
