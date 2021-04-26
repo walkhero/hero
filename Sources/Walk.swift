@@ -13,7 +13,7 @@ public struct Walk: Equatable, Property {
     
     public var data: Data {
         Data()
-            .adding(date.timestamp)
+            .adding(date)
             .adding(UInt16(duration))
             .adding(UInt16(steps))
             .adding(UInt16(metres))
@@ -24,7 +24,7 @@ public struct Walk: Equatable, Property {
     }
     
     public init(data: inout Data) {
-        date = .init(timestamp: data.uInt32())
+        date = data.date()
         duration = .init(data.uInt16())
         steps = .init(data.uInt16())
         metres = .init(data.uInt16())

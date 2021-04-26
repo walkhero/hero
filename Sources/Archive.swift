@@ -62,7 +62,7 @@ public struct Archive: Archived {
     
     public var data: Data {
         Data()
-            .adding(date.timestamp)
+            .adding(date)
             .adding(UInt8(challenges.count))
             .adding(challenges.flatMap(\.data))
             .adding(UInt32(walks.count))
@@ -81,7 +81,7 @@ public struct Archive: Archived {
     }
     
     public init(data: inout Data) {
-        date = .init(timestamp: data.uInt32())
+        date = data.date()
         challenges = .init((0 ..< .init(data.removeFirst())).map { _ in
             .init(data: &data)
         })
