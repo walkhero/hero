@@ -29,7 +29,9 @@ final class FinishTests: XCTestCase {
             }
             .store(in: &subs)
         
-        cloud.finish(steps: 34, metres: 56)
+        cloud.finish(steps: 34, metres: 56) {
+            XCTAssertTrue($0.publish)
+        }
         waitForExpectations(timeout: 1)
     }
     
@@ -46,7 +48,9 @@ final class FinishTests: XCTestCase {
             }
             .store(in: &subs)
         
-        cloud.finish(steps: 1, metres: 1)
+        cloud.finish(steps: 1, metres: 1) {
+            XCTAssertTrue($0.publish)
+        }
         cloud.publish()
         waitForExpectations(timeout: 1) { _ in
             XCTAssertEqual(.new, self.cloud.archive.value.finish)
@@ -94,11 +98,15 @@ final class FinishTests: XCTestCase {
                     }
                     .store(in: &self.subs)
                 
-                self.cloud.finish(steps: 6, metres: 5)
+                self.cloud.finish(steps: 6, metres: 5) { _ in
+                    
+                }
             }
             .store(in: &subs)
         
-        cloud.finish(steps: 3, metres: 4)
+        cloud.finish(steps: 3, metres: 4) { _ in
+            
+        }
         waitForExpectations(timeout: 1)
     }
     
@@ -130,11 +138,15 @@ final class FinishTests: XCTestCase {
                         expect.fulfill()
                     }
                     .store(in: &self.subs)
-                self.cloud.finish(steps: 1, metres: 1)
+                self.cloud.finish(steps: 1, metres: 1) { _ in
+                    
+                }
             }
             .store(in: &subs)
         
-        cloud.finish(steps: 3, metres: 4)
+        cloud.finish(steps: 3, metres: 4) { _ in
+            
+        }
         waitForExpectations(timeout: 1)
     }
 }

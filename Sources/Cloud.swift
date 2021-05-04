@@ -16,12 +16,12 @@ extension Cloud where A == Archive {
         }
     }
     
-    public func finish(steps: Int, metres: Int) {
-        mutating {
+    public func finish(steps: Int, metres: Int, completion: @escaping (Finish) -> Void) {
+        mutating(transform: {
             guard
                 case let .walking(duration) = $0.status,
                 duration > 0
-            else { return }
+            else { return nil }
             
             $0.walks = $0.walks.mutating(index: $0.walks.count - 1) {
                 $0.end(steps: steps, metres: metres)
@@ -34,7 +34,8 @@ extension Cloud where A == Archive {
                               steps: max(steps, $0.finish.steps),
                               metres: max(metres, $0.finish.metres),
                               area: max($0.area.count, $0.finish.area))
-        }
+            return $0.finish
+        }, completion: completion)
     }
     
     public func cancel() {

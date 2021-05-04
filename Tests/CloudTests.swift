@@ -45,7 +45,9 @@ final class CloudTests: XCTestCase {
                 expect.fulfill()
             }
             .store(in: &subs)
-        cloud.finish(steps: 0, metres: 0)
+        cloud.finish(steps: 0, metres: 0) { _ in
+            
+        }
         waitForExpectations(timeout: 1)
     }
 
@@ -65,7 +67,9 @@ final class CloudTests: XCTestCase {
                 expect.fulfill()
             }
             .store(in: &subs)
-        cloud.finish(steps: 3, metres: 4)
+        cloud.finish(steps: 3, metres: 4) { _ in
+            
+        }
         waitForExpectations(timeout: 1)
     }
     
@@ -88,7 +92,9 @@ final class CloudTests: XCTestCase {
                 expect.fulfill()
             }
             .store(in: &subs)
-        cloud.finish(steps: 3, metres: 4)
+        cloud.finish(steps: 3, metres: 4) { _ in
+            
+        }
         waitForExpectations(timeout: 1)
     }
     
