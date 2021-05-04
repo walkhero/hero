@@ -6,7 +6,6 @@ final class StreakTests: XCTestCase {
     
     override func setUp() {
         archive = .new
-        Repository.override = .init()
     }
     
     func testEmpty() {

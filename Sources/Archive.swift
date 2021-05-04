@@ -3,7 +3,7 @@ import Archivable
 
 public struct Archive: Archived {
     public static let new = Self()
-    public internal(set) var date: Date
+    public var date: Date
     public internal(set) var finish: Finish
     var walks: [Walk]
     var challenges: Set<Challenge>
@@ -91,14 +91,14 @@ public struct Archive: Archived {
         area = .init((0 ..< .init(data.uInt32())).map { _ in
             .init(data: &data)
         })
-        finish = data.isEmpty ? .new : .init(data: &data)
+        finish = .init(data: &data)
     }
     
     public mutating func start() {
         guard case .none = status else { return }
         
         walks.append(.init())
-        save()
+//        save()
     }
     
     public mutating func cancel() {
@@ -106,13 +106,13 @@ public struct Archive: Archived {
         
         discover = []
         walks.removeLast()
-        save()
+//        save()
     }
     
     public mutating func publish() {
         guard finish.publish else { return }
         finish = .new
-        save()
+//        save()
     }
     
     public mutating func discover(_ tile: Tile) {
@@ -141,25 +141,20 @@ public struct Archive: Archived {
                        metres: max(metres, finish.metres),
                        area: max(area.count, finish.area))
         
-        save()
+//        save()
     }
     
     public mutating func start(_ challenge: Challenge) {
         challenges.insert(challenge)
-        save()
+//        save()
     }
     
     public mutating func stop(_ challenge: Challenge) {
         challenges.remove(challenge)
-        save()
+//        save()
     }
     
     public func enrolled(_ challenge: Challenge) -> Bool {
         challenges.contains(challenge)
-    }
-    
-    private mutating func save() {
-        date = .init()
-        Repository.save(self)
     }
 }
