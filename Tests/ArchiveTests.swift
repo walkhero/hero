@@ -44,10 +44,12 @@ final class ArchiveTests: XCTestCase {
     
     func testWalking() throws {
         if case .none = archive.status {
-            archive.start()
+            archive.walks.append(.init())
             if case let .walking(time) = archive.status {
                 XCTAssertGreaterThan(time, 0)
-                archive.finish()
+                archive.walks = archive.walks.map {
+                    $0.end(steps: 0, metres: 0)
+                }
                 if case .none = archive.status {
                     
                 } else {

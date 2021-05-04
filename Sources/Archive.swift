@@ -94,66 +94,6 @@ public struct Archive: Archived {
         finish = .init(data: &data)
     }
     
-    public mutating func start() {
-        guard case .none = status else { return }
-        
-        walks.append(.init())
-//        save()
-    }
-    
-    public mutating func cancel() {
-        guard case .walking = status else { return }
-        
-        discover = []
-        walks.removeLast()
-//        save()
-    }
-    
-    public mutating func publish() {
-        guard finish.publish else { return }
-        finish = .new
-//        save()
-    }
-    
-    public mutating func discover(_ tile: Tile) {
-        guard
-            !area.contains(tile),
-            !discover.contains(tile)
-        else { return }
-        discover.insert(tile)
-    }
-    
-    public mutating func finish(steps: Int = 0, metres: Int = 0) {
-        guard
-            case let .walking(duration) = status,
-            duration > 0
-        else { return }
-        
-        walks = walks.mutating(index: walks.count - 1) {
-            $0.end(steps: steps, metres: metres)
-        }
-        
-        area.formUnion(discover)
-        discover = []
-        finish = .init(duration: duration,
-                       streak: max(calendar.streak.current, finish.streak),
-                       steps: max(steps, finish.steps),
-                       metres: max(metres, finish.metres),
-                       area: max(area.count, finish.area))
-        
-//        save()
-    }
-    
-    public mutating func start(_ challenge: Challenge) {
-        challenges.insert(challenge)
-//        save()
-    }
-    
-    public mutating func stop(_ challenge: Challenge) {
-        challenges.remove(challenge)
-//        save()
-    }
-    
     public func enrolled(_ challenge: Challenge) -> Bool {
         challenges.contains(challenge)
     }
