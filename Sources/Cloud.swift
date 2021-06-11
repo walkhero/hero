@@ -3,11 +3,13 @@ import Combine
 import Archivable
 
 extension Cloud where A == Archive {
-    public static let shared = Self(manifest: .init(
-                                        file: file,
-                                        container: "iCloud.WalkHero",
-                                        prefix: "hero_",
-                                        title: "WalkHero"))
+    public static var new: Self {
+        .init(manifest: .init(
+                file: file,
+                container: "iCloud.WalkHero",
+                prefix: "hero_",
+                title: "WalkHero"))
+    }
     
     public func start() {
         mutating {
