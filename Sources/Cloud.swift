@@ -25,9 +25,10 @@ extension Cloud where A == Archive {
                 duration > 0
             else { return nil }
             
-            $0.walks = $0.walks.mutating(index: $0.walks.count - 1) {
-                $0.end(steps: steps, metres: metres)
-            }
+            $0.walks = $0.walks
+                .mutating(index: $0.walks.count - 1) {
+                    $0.end(steps: steps, metres: metres)
+                }
             
             $0.area.formUnion($0.discover)
             $0.discover = []
