@@ -97,9 +97,4 @@ public struct Archive: Archived {
     public func enrolled(_ challenge: Challenge) -> Bool {
         challenges.contains(challenge)
     }
-    
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.date.timestamp == rhs.date.timestamp
-            && lhs.walks == rhs.walks
-    }
 }
