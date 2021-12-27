@@ -1,3 +1,3 @@
 # Hero
 
-WalkHero
+Walk Hero package

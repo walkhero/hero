@@ -1,13 +1,12 @@
-// swift-tools-version:5.4
-
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "Hero",
     platforms: [
-        .iOS(.v14),
-        .macOS(.v11),
-        .watchOS(.v7)
+        .iOS(.v15),
+        .macOS(.v12),
+        .watchOS(.v8)
     ],
     products: [
         .library(
