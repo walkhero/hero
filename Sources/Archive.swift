@@ -3,27 +3,25 @@ import Archivable
 
 public struct Archive: Arch {
     public var timestamp: UInt32
-//    public internal(set) var bookmarks: [Bookmark]
-//    var current: Bookmark?
+    public internal(set) var tiles: Set<Tile>
+    private var walks: [Walk]
     
     public var data: Data {
         .init()
-//        .adding(size: UInt8.self, collection: bookmarks)
-//        .adding(optional: current)
+        .adding(size: UInt32.self, collection: tiles)
+        .adding(size: UInt32.self, collection: walks)
     }
     
     public init() {
         timestamp = 0
-//        bookmarks = []
+        tiles = []
+        walks = []
     }
     
     public init(version: UInt8, timestamp: UInt32, data: Data) async {
         var data = data
         self.timestamp = timestamp
-//        bookmarks = data.collection(size: UInt8.self)
-        
-//        if !data.isEmpty {
-//            current = data.prototype()
-//        }
+        tiles = .init(data.collection(size: UInt32.self))
+        walks = data.collection(size: UInt32.self)
     }
 }

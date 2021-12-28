@@ -7,10 +7,6 @@ struct Walk: Storable {
     let steps: UInt16
     let metres: UInt16
     
-    var active: Bool {
-        duration == 0
-    }
-    
     var data: Data {
         Data()
             .adding(timestamp)
