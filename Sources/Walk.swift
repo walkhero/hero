@@ -32,12 +32,4 @@ struct Walk: Storable {
         self.steps = steps
         self.metres = metres
     }
-    
-    func end(steps: Int, metres: Int) -> Self {
-        .init(
-            timestamp: timestamp,
-            duration: Calendar.current.duration(from: timestamp),
-            steps: .init(steps),
-            metres: .init(metres))
-    }
 }
