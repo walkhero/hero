@@ -4,7 +4,20 @@ import Archivable
 public struct Archive: Arch {
     public var timestamp: UInt32
     public internal(set) var tiles: Set<Tile>
+    
+    public var streak: Streak {
+        calendar.streak
+    }
+    
+    public var calendar: [Year] {
+        walks
+            .map(\.timestamp)
+            .map(Date.init(timestamp:))
+            .calendar
+    }
+    
     var walks: [Walk]
+    
     
     public var data: Data {
         .init()
