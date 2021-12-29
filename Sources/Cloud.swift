@@ -4,17 +4,18 @@ import Archivable
 extension Cloud where Output == Archive {
     public func start() async {
         guard model.walks.isEmpty || model.walks.last!.duration > 0 else { return }
-        model.walks.append(.init())
+        add(walk: .init())
         await stream()
     }
     
     public func finish(steps: Int, metres: Int, tiles: Set<Tile>) async {
-        guard let walk = model.walks.popLast() else { return }
+        guard isWalking else { return }
         
+        let walk = model.walks.removeLast()
         let duration = Calendar.current.duration(from: walk.timestamp)
         
         if duration > 0 {
-            model.walks.append(.init(
+            add(walk: .init(
                 timestamp: walk.timestamp,
                 duration: duration,
                 steps: steps < UInt16.max ? .init(steps) : .max,
@@ -29,7 +30,23 @@ extension Cloud where Output == Archive {
         await stream()
     }
     
+    public func cancel() async {
+        guard isWalking else { return }
+        model.walks.removeLast()
+        await stream()
+    }
+    
     func add(walk: Walk) {
         model.walks.append(walk)
+    }
+    
+    private var isWalking: Bool {
+        model
+            .walks
+            .last
+            .map {
+                $0.duration == 0
+            }
+        ?? false
     }
 }
