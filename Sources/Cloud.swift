@@ -14,7 +14,16 @@ extension Cloud where Output == Archive {
         let duration = Calendar.current.duration(from: walk.timestamp)
         
         if duration > 0 {
+            model.walks.append(.init(
+                timestamp: walk.timestamp,
+                duration: duration,
+                steps: steps < UInt16.max ? .init(steps) : .max,
+                metres: metres < UInt16.max ? .init(metres) : .max))
             
+            tiles
+                .forEach {
+                    model.tiles.insert($0)
+                }
         }
         
         await stream()
