@@ -16,6 +16,14 @@ public struct Archive: Arch {
             .calendar
     }
     
+    public var updated: DateInterval? {
+        walks
+            .last
+            .map {
+                .init(start: .init(timestamp: $0.timestamp), duration: .init($0.duration))
+            }
+    }
+    
     var walks: [Walk]
     
     
