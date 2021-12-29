@@ -21,10 +21,7 @@ extension Cloud where Output == Archive {
                 steps: steps < UInt16.max ? .init(steps) : .max,
                 metres: metres < UInt16.max ? .init(metres) : .max))
             
-            tiles
-                .forEach {
-                    model.tiles.insert($0)
-                }
+            model.tiles = .init(.init(tiles) + .init(model.tiles))
         }
         
         await stream()
