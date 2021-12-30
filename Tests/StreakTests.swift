@@ -118,18 +118,21 @@ final class StreakTests: XCTestCase {
     }
     
     func testTimezones() {
-        let berlin = TimeZone(identifier: "Europe/Berlin")!
-        let mexico = TimeZone(identifier: "America/Mexico_City")!
         let timezone = Calendar.global.timeZone
+
+        let berlin = TimeZone(identifier: "Europe/Berlin")!
+        Calendar.global.timeZone = berlin
+        let date1 = Calendar.global.date(from: .init(timeZone: berlin, year: 2021, month: 1, day: 2, hour: 1))!
+        let walk1 = Walk(timestamp: date1.timestamp, duration: 1)
+        
+        let mexico = TimeZone(identifier: "America/Mexico_City")!
         Calendar.global.timeZone = mexico
+        let date2 = Calendar.global.date(from: .init(timeZone: mexico, year: 2021, month: 1, day: 3, hour: 22))!
+        let walk2 = Walk(timestamp: date2.timestamp, duration: 1)
         
-        let date1 = Calendar.current.date(from: .init(timeZone: berlin, year: 2021, month: 1, day: 1, hour: 1))!
-        let date2 = Calendar.current.date(from: .init(timeZone: mexico, year: 2021, month: 1, day: 2, hour: 22))!
+        archive.walks = [walk1, walk2]
         
-        archive.walks = [
-            .init(timestamp: date1.timestamp, duration: 1),
-            .init(timestamp: date2.timestamp, duration: 1)]
-        
+        Calendar.global.timeZone = berlin
         XCTAssertEqual(2, archive.calendar.streak.maximum)
         
         let month = archive
@@ -138,8 +141,8 @@ final class StreakTests: XCTestCase {
             .months
             .first { $0.value == 1 }!
         
-        XCTAssertTrue(month.days.first![0].hit)
         XCTAssertTrue(month.days.first![1].hit)
+        XCTAssertTrue(month.days.first![2].hit)
         
         Calendar.global.timeZone = timezone
     }

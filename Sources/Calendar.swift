@@ -2,6 +2,9 @@ import Foundation
 
 extension Calendar {
     static var global = current
+    static var offset: Int32 {
+        .init(global.timeZone.secondsFromGMT())
+    }
     
     var daysLeftMonth: Int {
         component(.day, from: date(

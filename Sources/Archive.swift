@@ -11,8 +11,7 @@ public struct Archive: Arch {
     
     public var calendar: [Year] {
         walks
-            .map(\.timestamp)
-            .map(Date.init(timestamp:))
+            .map(\.date)
             .calendar
     }
     
