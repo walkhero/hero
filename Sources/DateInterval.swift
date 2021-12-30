@@ -2,7 +2,7 @@ import Foundation
 
 extension DateInterval {
     private var calendar: Calendar { .current }
-    private var _end: Date { calendar.date(byAdding: .day, value: -1, to: end)! }
+    private var _end: Date { calendar.date(byAdding: .second, value: -1, to: end)! }
     
     func years<T>(transform: (Int, Self) -> T) -> [T] {
         (calendar.component(.year, from: start) ... calendar.component(.year, from: end))
@@ -15,7 +15,7 @@ extension DateInterval {
     }
     
     func months<T>(year: Int, transform: (Int, Self) -> T) -> [T] {
-        (calendar.component(.month, from: start) ... calendar.component(.month, from: end))
+        (calendar.component(.month, from: start) ... calendar.component(.month, from: _end))
             .map {
                 transform($0, calendar.dateInterval(
                             of: .month,
