@@ -1,17 +1,20 @@
 import Foundation
 
 extension DateInterval {
-    private var _end: Date { Calendar.global.date(byAdding: .day, value: -1, to: end)! }
+    private var _end: Date { Calendar.global.date(byAdding: .second, value: -1, to: end)! }
     
     func years<T>(transform: (Int, Self) -> T) -> [T] {
         (Calendar.global.component(.year, from: start) ... Calendar.global.component(.year, from: end))
             .map {
-                transform($0, intervalFor(year: $0))
+                transform($0,
+                          Calendar.global.dateInterval(
+                            of: .year,
+                            for: Calendar.global.date(from: .init(year: $0))!)!.intersection(with: self)!)
             }
     }
     
     func months<T>(year: Int, transform: (Int, Self) -> T) -> [T] {
-        (Calendar.global.component(.month, from: start) ... Calendar.global.component(.month, from: end))
+        (Calendar.global.component(.month, from: start) ... Calendar.global.component(.month, from: _end))
             .map {
                 transform($0, Calendar.global.dateInterval(
                     of: .month,
@@ -33,18 +36,5 @@ extension DateInterval {
                         transform($0, Calendar.global.date(from: .init(year: year, month: month, day: $0))!)
                     }
             }
-    }
-    
-    private func intervalFor(year: Int) -> DateInterval {
-        let complete = Calendar
-            .global
-            .dateInterval(of: .year,
-                          for: Calendar.global.date(from: .init(year: year))!)!
-        
-        if complete.end > end {
-            return complete.intersection(with: self)!
-        }
-        
-        return complete
     }
 }

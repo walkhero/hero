@@ -111,9 +111,10 @@ final class StreakTests: XCTestCase {
             .init(timestamp: date1.timestamp, duration: 1),
             .init(timestamp: date2.timestamp, duration: 1),
             .init(timestamp: date3.timestamp, duration: 1),
-            .init(timestamp: date4.timestamp, duration: 1)]
+            .init(timestamp: date4.timestamp, duration: 1)
+        ]
         
-        XCTAssertEqual(3, archive.calendar.streak.maximum)
+        XCTAssertEqual(4, archive.calendar.streak.maximum)
     }
     
     func testTimezones() {
