@@ -5,7 +5,7 @@
         "package": "Archivable",
         "repositoryURL": "https://github.com/archivable/package.git",
         "state": {
-          "branch": "main",
+          "branch": null,
           "revision": "02b6c26d3353ff5bfc92f26320f59d7aa94cd65d",
           "version": null
         }

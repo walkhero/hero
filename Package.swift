@@ -15,7 +15,7 @@ let package = Package(
             targets: ["Hero"]),
     ],
     dependencies: [
-        .package(name: "Archivable", url: "https://github.com/archivable/package.git", .branch("main"))
+        .package(name: "Archivable", url: "https://github.com/archivable/package.git", .revision("02b6c26d3353ff5bfc92f26320f59d7aa94cd65d"))
     ],
     targets: [
         .target(
