@@ -1,41 +1,50 @@
 import Foundation
 
 extension DateInterval {
-    private var calendar: Calendar { .current }
-    private var _end: Date { calendar.date(byAdding: .day, value: -1, to: end)! }
+    private var _end: Date { Calendar.global.date(byAdding: .day, value: -1, to: end)! }
     
     func years<T>(transform: (Int, Self) -> T) -> [T] {
-        (calendar.component(.year, from: start) ... calendar.component(.year, from: end))
+        (Calendar.global.component(.year, from: start) ... Calendar.global.component(.year, from: end))
             .map {
-                transform($0, calendar.dateInterval(
-                            of: .year,
-                            for: calendar.date(from: .init(year: $0))!)!
-                            .intersection(with: self)!)
+                transform($0, intervalFor(year: $0))
             }
     }
     
     func months<T>(year: Int, transform: (Int, Self) -> T) -> [T] {
-        (calendar.component(.month, from: start) ... calendar.component(.month, from: end))
+        (Calendar.global.component(.month, from: start) ... Calendar.global.component(.month, from: end))
             .map {
-                transform($0, calendar.dateInterval(
-                            of: .month,
-                            for: calendar.date(from: .init(year: year, month: $0))!)!)
+                transform($0, Calendar.global.dateInterval(
+                    of: .month,
+                    for: Calendar.global.date(from: .init(year: year, month: $0))!)!)
             }
     }
     
     func days<T>(year: Int, month: Int, transform: (Int, Date) -> T) -> [[T]] {
-        (calendar.component(.weekOfMonth, from: start) ... calendar.component(.weekOfMonth, from: _end))
+        (Calendar.global.component(.weekOfMonth, from: start) ... Calendar.global.component(.weekOfMonth, from: _end))
             .map {
-                calendar.dateInterval(
+                Calendar.global.dateInterval(
                     of: .weekOfMonth,
-                    for: calendar.date(from: .init(year: year, month: month, weekday: calendar.firstWeekday, weekOfMonth: $0))!)!
+                    for: Calendar.global.date(from: .init(year: year, month: month, weekday: Calendar.global.firstWeekday, weekOfMonth: $0))!)!
                     .intersection(with: self)!
             }
             .map {
-                (calendar.component(.day, from: $0.start) ... calendar.component(.day, from: $0._end))
+                (Calendar.global.component(.day, from: $0.start) ... Calendar.global.component(.day, from: $0._end))
                     .map {
-                        transform($0, calendar.date(from: .init(year: year, month: month, day: $0))!)
+                        transform($0, Calendar.global.date(from: .init(year: year, month: month, day: $0))!)
                     }
             }
+    }
+    
+    private func intervalFor(year: Int) -> DateInterval {
+        let complete = Calendar
+            .global
+            .dateInterval(of: .year,
+                          for: Calendar.global.date(from: .init(year: year))!)!
+        
+        if complete.end > end {
+            return complete.intersection(with: self)!
+        }
+        
+        return complete
     }
 }

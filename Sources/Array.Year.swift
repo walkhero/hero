@@ -8,7 +8,7 @@ extension Array where Element == Year {
                 .flatMap(\.days)
                 .flatMap { $0 }
                 .map(\.hit)
-                .dropLast(Calendar.current.daysLeftMonth)
+                .dropLast(Calendar.global.daysLeftMonth)
                 .dropLastIfFalse
                 .reduce(.zero) {
                     $1 ? $0.hit : $0.miss

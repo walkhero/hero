@@ -8,7 +8,7 @@ public enum Defaults: String {
 
     public static var action: Action {
         if let created = wasCreated {
-            let days = Calendar.current.dateComponents([.day], from: created, to: .init()).day!
+            let days = Calendar.global.dateComponents([.day], from: created, to: .init()).day!
             if !hasRated && days > 4 {
                 hasRated = true
                 return .rate

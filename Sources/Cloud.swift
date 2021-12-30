@@ -12,7 +12,7 @@ extension Cloud where Output == Archive {
         guard isWalking else { return }
         
         let walk = model.walks.removeLast()
-        let duration = Calendar.current.duration(from: walk.timestamp)
+        let duration = Calendar.global.duration(from: walk.timestamp)
         
         if duration > 0 {
             add(walk: .init(

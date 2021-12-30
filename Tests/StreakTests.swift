@@ -98,6 +98,48 @@ final class StreakTests: XCTestCase {
     
     func testToday() {
         let today = Calendar.current.component(.day, from: .init())
-        XCTAssertEqual(today, archive.calendar.first?.months.first?.days.flatMap { $0 }.first(where: { $0.today })?.value)
+        XCTAssertEqual(today, archive.calendar.first?.months.first?.days.flatMap { $0 }.first { $0.today }?.value)
+    }
+    
+    func testYears() {
+        let date1 = Calendar.current.date(from: .init(year: 2020, month: 12, day: 30, hour: 5))!
+        let date2 = Calendar.current.date(from: .init(year: 2020, month: 12, day: 31, hour: 5))!
+        let date3 = Calendar.current.date(from: .init(year: 2021, month: 1, day: 1, hour: 5))!
+        let date4 = Calendar.current.date(from: .init(year: 2021, month: 1, day: 2, hour: 5))!
+        
+        archive.walks = [
+            .init(timestamp: date1.timestamp, duration: 1),
+            .init(timestamp: date2.timestamp, duration: 1),
+            .init(timestamp: date3.timestamp, duration: 1),
+            .init(timestamp: date4.timestamp, duration: 1)]
+        
+        XCTAssertEqual(3, archive.calendar.streak.maximum)
+    }
+    
+    func testTimezones() {
+        let berlin = TimeZone(identifier: "Europe/Berlin")!
+        let mexico = TimeZone(identifier: "America/Mexico_City")!
+        let timezone = Calendar.global.timeZone
+        Calendar.global.timeZone = mexico
+        
+        let date1 = Calendar.current.date(from: .init(timeZone: berlin, year: 2021, month: 1, day: 1, hour: 1))!
+        let date2 = Calendar.current.date(from: .init(timeZone: mexico, year: 2021, month: 1, day: 2, hour: 22))!
+        
+        archive.walks = [
+            .init(timestamp: date1.timestamp, duration: 1),
+            .init(timestamp: date2.timestamp, duration: 1)]
+        
+        XCTAssertEqual(2, archive.calendar.streak.maximum)
+        
+        let month = archive
+            .calendar
+            .first { $0.value == 2021 }!
+            .months
+            .first { $0.value == 1 }!
+        
+        XCTAssertTrue(month.days.first![0].hit)
+        XCTAssertTrue(month.days.first![1].hit)
+        
+        Calendar.global.timeZone = timezone
     }
 }
