@@ -3,9 +3,9 @@ import Foundation
 extension DateInterval {
     private var _end: Date { Calendar.global.date(byAdding: .second, value: -1, to: end)! }
     
-    func years<T>(transform: (Int, Self) -> T) -> [T] {
+    func years<T>(transform: (Int, Self) -> [T]) -> [T] {
         (Calendar.global.component(.year, from: start) ... Calendar.global.component(.year, from: end))
-            .map {
+            .flatMap {
                 transform($0,
                           Calendar.global.dateInterval(
                             of: .year,

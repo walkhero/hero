@@ -10,7 +10,7 @@ final class StreakTests: XCTestCase {
     
     func testEmpty() {
         XCTAssertEqual(.zero, archive.calendar.streak)
-        XCTAssertNotNil(archive.calendar.first?.months.first?.days)
+        XCTAssertNotNil(archive.calendar.first?.items.first?.first)
     }
     
     func testStreak() {
@@ -61,7 +61,7 @@ final class StreakTests: XCTestCase {
             .init(timestamp: thursday.timestamp, duration: 1),
             .init(timestamp: saturday.timestamp, duration: 1),
             .init(timestamp: saturday.timestamp, duration: 1)]
-        XCTAssertEqual(.init(value: 3, days: [
+        XCTAssertEqual(.init(year: 2021, month: 3, items: [
             [.init(value: 1, today: false, hit: false),
              .init(value: 2, today: false, hit: false),
              .init(value: 3, today: false, hit: false),
@@ -93,12 +93,12 @@ final class StreakTests: XCTestCase {
              [.init(value: 29, today: false, hit: false),
              .init(value: 30, today: false, hit: false),
              .init(value: 31, today: false, hit: false)]
-        ]), archive.calendar.first!.months.first!)
+        ]), archive.calendar.first!)
     }
     
     func testToday() {
         let today = Calendar.current.component(.day, from: .init())
-        XCTAssertEqual(today, archive.calendar.first?.months.first?.days.flatMap { $0 }.first { $0.today }?.value)
+        XCTAssertEqual(today, archive.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
     }
     
     func testYears() {
@@ -137,12 +137,10 @@ final class StreakTests: XCTestCase {
         
         let month = archive
             .calendar
-            .first { $0.value == 2021 }!
-            .months
-            .first { $0.value == 1 }!
+            .first { $0.year == 2021 && $0.month == 1 }!
         
-        XCTAssertTrue(month.days.first![1].hit)
-        XCTAssertTrue(month.days.first![2].hit)
+        XCTAssertTrue(month.items.first![1].hit)
+        XCTAssertTrue(month.items.first![2].hit)
         
         Calendar.global.timeZone = timezone
     }

@@ -5,7 +5,7 @@ public struct Archive: Arch {
     public var timestamp: UInt32
     public internal(set) var tiles: Set<Tile>
     
-    public var calendar: [Year] {
+    public var calendar: [Days] {
         walks
             .map(\.date)
             .calendar
@@ -20,7 +20,6 @@ public struct Archive: Arch {
     }
     
     var walks: [Walk]
-    
     
     public var data: Data {
         .init()

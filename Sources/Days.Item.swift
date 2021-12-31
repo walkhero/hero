@@ -1,7 +1,7 @@
 import Foundation
 
-extension Year.Month {
-    public struct Day: Hashable {
+extension Days {
+    public struct Item: Equatable {
         public let value: Int
         public let today: Bool
         public let hit: Bool

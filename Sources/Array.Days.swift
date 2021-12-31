@@ -1,11 +1,10 @@
 import Foundation
 
-extension Array where Element == Year {
+extension Array where Element == Days {
     public var streak: Streak {
         isEmpty
             ? .zero
-            : flatMap(\.months)
-                .flatMap(\.days)
+            : flatMap(\.items)
                 .flatMap { $0 }
                 .map(\.hit)
                 .dropLast(Calendar.global.daysLeftMonth)

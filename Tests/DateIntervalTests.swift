@@ -28,7 +28,7 @@ final class DateIntervalTests: XCTestCase {
         let firstDayOfMonth = Calendar.current.date(from: .init(year: 2008, month: 4, day: 1))!
         let interval = DateInterval(start: firstDayOfMonth, duration: 1)
         _ = interval.years { year, interval in
-            _ = interval.months(year: year) {
+            interval.months(year: year) {
                 XCTAssertEqual(4, $0)
                 XCTAssertNotNil($1)
             }

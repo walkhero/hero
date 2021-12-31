@@ -1,16 +1,22 @@
 import Foundation
 
 extension Array where Element == Date {
-    public var calendar: [Year] {
+    public var calendar: [Days] {
         ranges { dates, interval in
             interval
                 .years { year, interval in
-                    .init(value: year, months: interval.months(year: year) { month, interval in
-                        .init(value: month, days: interval.days(year: year, month: month) { day, date in
-                            .init(value: day, today: Calendar.global.isDateInToday(date), hit: dates.hits(date))
-                        })
-                    })
-            }
+                    interval
+                        .months(year: year) { month, interval in
+                            .init(year: year,
+                                  month: month,
+                                  items: interval
+                                    .days(year: year, month: month) { day, date in
+                                        .init(value: day,
+                                              today: Calendar.global.isDateInToday(date),
+                                              hit: dates.hits(date))
+                                    })
+                        }
+                }
         }
     }
     
