@@ -1,7 +1,7 @@
 import Foundation
 
 extension Array where Element == Year {
-    var streak: Streak {
+    public var streak: Streak {
         isEmpty
             ? .zero
             : flatMap(\.months)
