@@ -9,12 +9,12 @@ struct Walk: Storable {
     let metres: UInt16
     
     var data: Data {
-        Data()
-            .adding(timestamp)
-            .adding(offset)
-            .adding(duration)
-            .adding(steps)
-            .adding(metres)
+        .init()
+        .adding(timestamp)
+        .adding(offset)
+        .adding(duration)
+        .adding(steps)
+        .adding(metres)
     }
     
     init() {

@@ -8,9 +8,9 @@ public struct Tile: Storable, Hashable {
     public let y: UInt32
     
     public var data: Data {
-        Data()
-            .adding(x)
-            .adding(y)
+        .init()
+        .adding(x)
+        .adding(y)
     }
     
     public init(coordinate: CLLocationCoordinate2D) {
