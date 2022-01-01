@@ -2,8 +2,8 @@ import Foundation
 
 extension Calendar {
     static var global = current
-    static var offset: Int32 {
-        .init(global.timeZone.secondsFromGMT())
+    var offset: Int32 {
+        .init(timeZone.secondsFromGMT())
     }
     
     var daysLeftMonth: Int {

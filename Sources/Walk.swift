@@ -29,7 +29,7 @@ struct Walk: Storable {
         metres = data.number()
     }
     
-    init(timestamp: UInt32, offset: Int32 = Calendar.offset, duration: UInt16 = 0, steps: UInt16 = 0, metres: UInt16 = 0) {
+    init(timestamp: UInt32, offset: Int32 = Calendar.global.offset, duration: UInt16 = 0, steps: UInt16 = 0, metres: UInt16 = 0) {
         self.timestamp = timestamp
         self.offset = offset
         self.duration = duration
@@ -38,6 +38,6 @@ struct Walk: Storable {
     }
     
     var date: Date {
-        .init(timeIntervalSince1970: .init(timestamp) - .init(Calendar.offset - offset))
+        .init(timeIntervalSince1970: .init(timestamp) - .init(Calendar.global.offset - offset))
     }
 }
