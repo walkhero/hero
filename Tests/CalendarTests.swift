@@ -98,4 +98,10 @@ final class CalendarTests: XCTestCase {
         XCTAssertEqual(3, calendar.trailingWeekdays(year: 2021, month: 8, day: 7))
         XCTAssertEqual(2, calendar.trailingWeekdays(year: 2021, month: 8, day: 8))
     }
+    
+    func testLeadingTrailingNewYear() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = .init(identifier: "de_DE")
+        XCTAssertEqual(5, calendar.leadingWeekdays(year: 2022, month: 1, day: 1))
+    }
 }
