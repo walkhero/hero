@@ -4,7 +4,9 @@ public enum Defaults: String {
     case
     rated,
     created,
-    premium
+    premium,
+    hide,
+    follow
 
     public static var action: Action {
         if let created = wasCreated {
@@ -29,6 +31,16 @@ public enum Defaults: String {
     public static var hasRated: Bool {
         get { self[.rated] as? Bool ?? false }
         set { self[.rated] = newValue }
+    }
+    
+    public static var shouldHide: Bool {
+        get { self[.hide] as? Bool ?? true }
+        set { self[.hide] = newValue }
+    }
+    
+    public static var shouldFollow: Bool {
+        get { self[.follow] as? Bool ?? true }
+        set { self[.follow] = newValue }
     }
     
     static var wasCreated: Date? {
