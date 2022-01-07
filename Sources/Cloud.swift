@@ -9,7 +9,7 @@ extension Cloud where Output == Archive {
     }
     
     public func finish(steps: Int, metres: Int, tiles: Set<Tile>) async {
-        guard isWalking else { return }
+        guard model.walking != nil else { return }
         
         let walk = model.walks.removeLast()
         let duration = Calendar.global.duration(from: walk.timestamp)
@@ -28,22 +28,12 @@ extension Cloud where Output == Archive {
     }
     
     public func cancel() async {
-        guard isWalking else { return }
+        guard model.walking != nil else { return }
         model.walks.removeLast()
         await stream()
     }
     
     func add(walk: Walk) {
         model.walks.append(walk)
-    }
-    
-    private var isWalking: Bool {
-        model
-            .walks
-            .last
-            .map {
-                $0.duration == 0
-            }
-        ?? false
     }
 }

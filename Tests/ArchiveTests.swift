@@ -30,4 +30,9 @@ final class ArchiveTests: XCTestCase {
         XCTAssertEqual(456, archive.tiles.first?.x)
         XCTAssertEqual(9870, archive.tiles.first?.y)
     }
+    
+    func testWalking() {
+        archive.walks = [.init(timestamp: Date(timeIntervalSinceNow: -100).timestamp)]
+        XCTAssertEqual(100, Int(archive.walking!))
+    }
 }
