@@ -19,11 +19,11 @@ public struct Archive: Arch {
             }
     }
     
-    public var walking: TimeInterval? {
+    public var walking: Date? {
         walks
             .last
             .flatMap {
-                $0.duration == 0 ? Date.now.timeIntervalSince(.init(timestamp: $0.timestamp)) : nil
+                $0.duration == 0 ? .init(timestamp: $0.timestamp) : nil
             }
     }
     

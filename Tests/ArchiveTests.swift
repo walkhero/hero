@@ -33,6 +33,6 @@ final class ArchiveTests: XCTestCase {
     
     func testWalking() {
         archive.walks = [.init(timestamp: Date(timeIntervalSinceNow: -100).timestamp)]
-        XCTAssertEqual(100, Int(archive.walking!))
+        XCTAssertEqual(100, Int(Date.now.timeIntervalSince(archive.walking!)))
     }
 }
