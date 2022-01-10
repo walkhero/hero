@@ -21,7 +21,7 @@ extension Cloud where Output == Archive {
                 steps: steps < UInt16.max ? .init(steps) : .max,
                 metres: metres < UInt16.max ? .init(metres) : .max))
             
-            model.tiles = .init(.init(tiles) + .init(model.tiles))
+            model.tiles = model.tiles.union(tiles)
         }
         
         await stream()
@@ -35,29 +35,36 @@ extension Cloud where Output == Archive {
     
     public func migrate(directory: URL) async {
         let file = directory.appendingPathComponent("WalkHero.archive")
+        
         guard
             FileManager.default.fileExists(atPath: file.path),
-            let data = try? Data(contentsOf: file),
+            var data = try? Data(contentsOf: file),
             !data.isEmpty
-            
         else { return }
+        
+        let offset = Calendar.global.offset
+        
+        _ = data.date()
+        
+        _ = (0 ..< .init(data.number() as UInt8))
+            .map { _ in
+                data.number() as UInt8
+            }
+        
+        model.walks.append(contentsOf:
+                            (0 ..< .init(data.number() as UInt32))
+                            .map { _ in
+                            .init(timestamp: data.number(),
+                                  offset: offset,
+                                  duration: data.number(),
+                                  steps: data.number(),
+                                  metres: data.number())
+        })
+        
+        model.tiles = model.tiles.union(Set(data.collection(size: UInt32.self) as [Tile]))
         
         await stream()
         try? FileManager.default.removeItem(at: file)
-        
-        /*
-         date = data.date()
-         challenges = .init((0 ..< .init(data.removeFirst())).map { _ in
-             .init(data: &data)
-         })
-         walks = (0 ..< .init(data.uInt32())).map { _ in
-             .init(data: &data)
-         }
-         area = .init((0 ..< .init(data.uInt32())).map { _ in
-             .init(data: &data)
-         })
-         finish = .init(data: &data)
-         */
     }
     
     func add(walk: Walk) {

@@ -26,6 +26,7 @@ final class MigrationTests: XCTestCase {
     func testStreak() async {
         await cloud.migrate(directory: directory)
         let streak = await cloud.model.calendar.streak
+        XCTAssertEqual(269, streak.maximum)
         XCTAssertEqual(269, streak.current)
     }
     
@@ -33,5 +34,23 @@ final class MigrationTests: XCTestCase {
         await cloud.migrate(directory: directory)
         let tiles = await cloud.model.tiles
         XCTAssertEqual(12_729, tiles.count)
+    }
+    
+    func testWalks() async {
+        let timezone = Calendar.global.timeZone
+
+        let berlin = TimeZone(identifier: "Europe/Berlin")!
+        Calendar.global.timeZone = berlin
+        
+        await cloud.migrate(directory: directory)
+        let walks = await cloud.model.walks
+        walks
+            .forEach {
+                XCTAssertEqual(3600, $0.offset)
+                XCTAssertGreaterThan($0.duration, 0)
+                XCTAssertGreaterThan($0.timestamp, 0)
+            }
+        
+        Calendar.global.timeZone = timezone
     }
 }
