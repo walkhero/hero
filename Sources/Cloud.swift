@@ -33,6 +33,33 @@ extension Cloud where Output == Archive {
         await stream()
     }
     
+    public func migrate(directory: URL) async {
+        let file = directory.appendingPathComponent("WalkHero.archive")
+        guard
+            FileManager.default.fileExists(atPath: file.path),
+            let data = try? Data(contentsOf: file),
+            !data.isEmpty
+            
+        else { return }
+        
+        await stream()
+        try? FileManager.default.removeItem(at: file)
+        
+        /*
+         date = data.date()
+         challenges = .init((0 ..< .init(data.removeFirst())).map { _ in
+             .init(data: &data)
+         })
+         walks = (0 ..< .init(data.uInt32())).map { _ in
+             .init(data: &data)
+         }
+         area = .init((0 ..< .init(data.uInt32())).map { _ in
+             .init(data: &data)
+         })
+         finish = .init(data: &data)
+         */
+    }
+    
     func add(walk: Walk) {
         model.walks.append(walk)
     }
