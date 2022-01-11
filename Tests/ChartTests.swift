@@ -22,6 +22,13 @@ final class ChartTests: XCTestCase {
         XCTAssertEqual(5, archive.steps.max)
     }
     
+    func testTotal() {
+        archive.walks.append(.init(timestamp: 0, steps: 1))
+        archive.walks.append(.init(timestamp: 0, steps: 5))
+        archive.walks.append(.init(timestamp: 0, steps: 3))
+        XCTAssertEqual(9, archive.steps.total)
+    }
+    
     func testStepsZero() {
         archive.walks = [
             .init(timestamp: 0, duration: 1, steps: 0),

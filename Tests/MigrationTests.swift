@@ -30,6 +30,13 @@ final class MigrationTests: XCTestCase {
         XCTAssertEqual(0, streak.current)
     }
     
+    func testSteps() async {
+        await cloud.migrate(directory: directory)
+        let steps = await cloud.model.steps
+        XCTAssertEqual(13250, steps.max)
+        XCTAssertEqual(3567, steps.average)
+    }
+    
     func testMap() async {
         await cloud.migrate(directory: directory)
         let tiles = await cloud.model.tiles

@@ -20,11 +20,11 @@ public struct Archive: Arch {
     }
     
     public var steps: Chart {
-        walks.map(\.steps).chart
+        walks.map { Int($0.steps) }.chart
     }
     
     public var metres: Chart {
-        walks.map(\.metres).chart
+        walks.map { Int($0.metres) }.chart
     }
     
     public var walking: Date? {
