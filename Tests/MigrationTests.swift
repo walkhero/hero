@@ -27,7 +27,7 @@ final class MigrationTests: XCTestCase {
         await cloud.migrate(directory: directory)
         let streak = await cloud.model.calendar.streak
         XCTAssertEqual(269, streak.maximum)
-        XCTAssertEqual(269, streak.current)
+        XCTAssertEqual(0, streak.current)
     }
     
     func testMap() async {

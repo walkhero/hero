@@ -19,6 +19,14 @@ public struct Archive: Arch {
             }
     }
     
+    public var steps: Chart {
+        walks.map(\.steps).chart
+    }
+    
+    public var metres: Chart {
+        walks.map(\.metres).chart
+    }
+    
     public var walking: Date? {
         walks
             .last
