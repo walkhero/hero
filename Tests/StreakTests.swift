@@ -35,17 +35,17 @@ final class StreakTests: XCTestCase {
             .init(timestamp: daysAgo5.timestamp, duration: 1),
             .init(timestamp: daysAgo3.timestamp, duration: 1)]
         
-        XCTAssertEqual(2, archive.calendar.streak.maximum)
+        XCTAssertEqual(2, archive.calendar.streak.max)
         XCTAssertEqual(0, archive.calendar.streak.current)
         
         archive.walks.append(.init(timestamp: Calendar.current.date(byAdding: .day, value: -1, to: .init())!.timestamp, duration: 1))
         
-        XCTAssertEqual(2, archive.calendar.streak.maximum)
+        XCTAssertEqual(2, archive.calendar.streak.max)
         XCTAssertEqual(1, archive.calendar.streak.current)
         
         archive.walks.append(.init(timestamp: Date.now.timestamp, duration: 1))
         
-        XCTAssertEqual(2, archive.calendar.streak.maximum)
+        XCTAssertEqual(2, archive.calendar.streak.max)
         XCTAssertEqual(2, archive.calendar.streak.current)
     }
     
@@ -114,7 +114,7 @@ final class StreakTests: XCTestCase {
             .init(timestamp: date4.timestamp, duration: 1)
         ]
         
-        XCTAssertEqual(4, archive.calendar.streak.maximum)
+        XCTAssertEqual(4, archive.calendar.streak.max)
     }
     
     func testTimezones() {
@@ -133,7 +133,7 @@ final class StreakTests: XCTestCase {
         archive.walks = [walk1, walk2]
         
         Calendar.global.timeZone = berlin
-        XCTAssertEqual(2, archive.calendar.streak.maximum)
+        XCTAssertEqual(2, archive.calendar.streak.max)
         
         let month = archive
             .calendar
