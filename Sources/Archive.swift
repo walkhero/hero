@@ -19,12 +19,16 @@ public struct Archive: Arch {
             }
     }
     
+    public var duration: Chart {
+        walks.map { .init($0.duration) }.chart
+    }
+    
     public var steps: Chart {
-        walks.map { Int($0.steps) }.chart
+        walks.map { .init($0.steps) }.chart
     }
     
     public var metres: Chart {
-        walks.map { Int($0.metres) }.chart
+        walks.map { .init($0.metres) }.chart
     }
     
     public var walking: Date? {
