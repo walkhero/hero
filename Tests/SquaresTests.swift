@@ -4,7 +4,7 @@ import MapKit
 
 private let tile = MKMapRect.world.width / pow(2, 20)
 
-final class MapTests: XCTestCase {
+final class SquaresTests: XCTestCase {
     private let aberCastle = CLLocationCoordinate2D(latitude: 52.413244, longitude: -4.089675)
     private let deg1 = 110.574
     private let km11 = 0.1
@@ -38,11 +38,11 @@ final class MapTests: XCTestCase {
         let size = MKMapRect.world.width / pow(2, 20)
         let point = MKMapPoint(aberCastle)
         let tile = MKMapPoint(x: floor(point.x / size), y: floor(point.y / size))
-        XCTAssertEqual(Tile(x: .init(tile.x), y: .init(tile.y)), .init(coordinate: aberCastle))
+        XCTAssertEqual(Squares.Item(x: .init(tile.x), y: .init(tile.y)), .init(coordinate: aberCastle))
     }
     
     func testOverlay() {
-        let overlay = Set([Tile(x: 0, y: 0), .init(x: 1, y: 1)]).overlay.interiorPolygons?.sorted { $0.boundingMapRect.minX < $1.boundingMapRect.minX }
+        let overlay = Set([Squares.Item(x: 0, y: 0), .init(x: 1, y: 1)]).overlay.interiorPolygons?.sorted { $0.boundingMapRect.minX < $1.boundingMapRect.minX }
         XCTAssertEqual(2, overlay?.count)
         
         XCTAssertEqual(0, overlay?.first?.boundingMapRect.minX)

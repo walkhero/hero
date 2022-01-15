@@ -8,7 +8,7 @@ extension Cloud where Output == Archive {
         await stream()
     }
     
-    public func finish(steps: Int, metres: Int, tiles: Set<Tile>) async -> Summary? {
+    public func finish(steps: Int, metres: Int, tiles: Set<Squares.Item>) async -> Summary? {
         guard model.walking != nil else { return nil }
         
         let walk = model.walks.removeLast()

@@ -3,7 +3,7 @@ import Archivable
 
 public struct Archive: Arch {
     public var timestamp: UInt32
-    public internal(set) var tiles: Set<Tile>
+    public internal(set) var tiles: Set<Squares.Item>
     
     public var calendar: [Days] {
         walks
