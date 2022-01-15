@@ -15,7 +15,7 @@ extension Cloud where Output == Archive {
         let duration = Calendar.global.duration(from: walk.timestamp)
         let steps = steps < UInt16.max ? UInt16(steps) : .max
         let metres = metres < UInt16.max ? UInt16(metres) : .max
-        let squares = tiles.subtracting(model.tiles).count
+        let squares = tiles.subtracting(model.squares).count
         
         if duration > 0 {
             add(walk: .init(
@@ -24,7 +24,7 @@ extension Cloud where Output == Archive {
                 steps: steps,
                 metres: metres))
             
-            model.tiles = model.tiles.union(tiles)
+            model.squares = model.squares.union(tiles)
         }
         
         await stream()

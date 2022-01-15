@@ -14,15 +14,15 @@ extension Squares {
             .adding(y)
         }
         
-        public init(coordinate: CLLocationCoordinate2D) {
-            let point = MKMapPoint(coordinate)
-            let flatten = MKMapPoint(x: floor(point.x / tile), y: floor(point.y / tile))
-            self.init(x: .init(flatten.x), y: .init(flatten.y))
-        }
-        
         public init(data: inout Data) {
             x = data.number()
             y = data.number()
+        }
+        
+        init(coordinate: CLLocationCoordinate2D) {
+            let point = MKMapPoint(coordinate)
+            let flatten = MKMapPoint(x: floor(point.x / tile), y: floor(point.y / tile))
+            self.init(x: .init(flatten.x), y: .init(flatten.y))
         }
         
         init(x: Int, y: Int) {
@@ -42,5 +42,4 @@ extension Squares {
         }
     #endif
     }
-
 }
