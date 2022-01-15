@@ -33,40 +33,6 @@ extension Cloud where Output == Archive {
         await stream()
     }
     
-    public func migrate(directory: URL) async {
-        let file = directory.appendingPathComponent("WalkHero.archive")
-        
-        guard
-            FileManager.default.fileExists(atPath: file.path),
-            var data = try? Data(contentsOf: file),
-            !data.isEmpty
-        else { return }
-        
-        let offset = Calendar.global.offset
-        
-        _ = data.date()
-        
-        _ = (0 ..< .init(data.number() as UInt8))
-            .map { _ in
-                data.number() as UInt8
-            }
-        
-        model.walks.append(contentsOf:
-                            (0 ..< .init(data.number() as UInt32))
-                            .map { _ in
-                            .init(timestamp: data.number(),
-                                  offset: offset,
-                                  duration: data.number(),
-                                  steps: data.number(),
-                                  metres: data.number())
-        })
-        
-        model.tiles = model.tiles.union(Set(data.collection(size: UInt32.self) as [Tile]))
-        
-        await stream()
-        try? FileManager.default.removeItem(at: file)
-    }
-    
     func add(walk: Walk) {
         model.walks.append(walk)
     }
