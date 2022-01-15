@@ -8,14 +8,14 @@ extension Cloud where Output == Archive {
         await stream()
     }
     
-    public func finish(steps: Int, metres: Int, tiles: Set<Squares.Item>) async -> Summary? {
+    public func finish(steps: Int, metres: Int, squares: Set<Squares.Item>) async -> Summary? {
         guard model.walking != nil else { return nil }
         
         let walk = model.walks.removeLast()
         let duration = Calendar.global.duration(from: walk.timestamp)
         let steps = steps < UInt16.max ? UInt16(steps) : .max
         let metres = metres < UInt16.max ? UInt16(metres) : .max
-        let squares = tiles.subtracting(model.squares).count
+        let count = squares.subtracting(model.squares).count
         
         if duration > 0 {
             add(walk: .init(
@@ -24,7 +24,7 @@ extension Cloud where Output == Archive {
                 steps: steps,
                 metres: metres))
             
-            model.squares = model.squares.union(tiles)
+            model.squares = model.squares.union(squares)
         }
         
         await stream()
@@ -32,7 +32,7 @@ extension Cloud where Output == Archive {
         return .init(started: .init(timestamp: walk.timestamp),
                      steps: .init(steps),
                      metres: .init(metres),
-                     squares: squares,
+                     squares: count,
                      streak: model.calendar.streak.current)
     }
     
