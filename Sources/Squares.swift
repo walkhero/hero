@@ -5,7 +5,7 @@ public struct Squares: Equatable {
     public private(set) var items = Set<Item>()
     let url: URL
     
-    init() {
+    public init() {
         url = FileManager
             .default
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
