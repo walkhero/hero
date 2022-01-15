@@ -11,7 +11,6 @@ public struct Squares: Equatable {
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Squares.cache")
         
-        print("init squares")
         guard
             FileManager.default.fileExists(atPath: url.path),
             var data = try? Data(contentsOf: url),
@@ -19,8 +18,6 @@ public struct Squares: Equatable {
         else { return }
         
         items = .init(data.collection(size: UInt16.self))
-        
-        print("init squares \(items.count)")
     }
     
     public mutating func add(locations: [CLLocation]) {
@@ -32,18 +29,14 @@ public struct Squares: Equatable {
         guard update != items else { return }
         items = update
         
-        try! Data()
+        try? Data()
             .adding(size: UInt16.self, collection: items)
             .write(to: url, options: .atomic)
-        
-        print("save \(items.count)")
     }
     
     public mutating func clear() {
         items = []
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         try? FileManager.default.removeItem(at: url)
-        
-        print("delete squares")
     }
 }
