@@ -31,7 +31,7 @@ public struct Squares: Equatable {
             task?.cancel()
             task = Task { [url] in
                 do {
-                    try await Task.sleep(nanoseconds: 500_000_000)
+                    try await Task.sleep(nanoseconds: 1000_000_000)
                     try? Data()
                         .adding(size: UInt16.self, collection: update)
                         .write(to: url, options: .atomic)

@@ -26,12 +26,12 @@ final class SquaresTests: XCTestCase {
         squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
             XCTAssertTrue(FileManager.default.fileExists(atPath: self.squares.url.path))
             expect.fulfill()
         }
         
-        waitForExpectations(timeout: 1)
+        waitForExpectations(timeout: 2)
     }
     
     func testCacheDebounce() {
