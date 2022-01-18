@@ -68,6 +68,7 @@ final class SquaresTests: XCTestCase {
         squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
         squares.clear()
+        XCTAssertTrue(squares.task!.isCancelled)
         XCTAssertTrue(squares.items.isEmpty)
         XCTAssertFalse(FileManager.default.fileExists(atPath: squares.url.path))
     }

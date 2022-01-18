@@ -3,8 +3,8 @@ import CoreLocation
 
 public struct Squares: Equatable {
     public private(set) var items = Set<Item>()
+    var task: Task<Void, Never>?
     let url: URL
-    private var task: Task<Void, Never>?
     
     public init() {
         url = FileManager
@@ -35,17 +35,21 @@ public struct Squares: Equatable {
                     try? Data()
                         .adding(size: UInt16.self, collection: update)
                         .write(to: url, options: .atomic)
+                    print("saved")
                 } catch {
-                    
+                    print("cancelled")
                 }
             }
         }
     }
     
     public mutating func clear() {
+        task?.cancel()
         items = []
-        guard FileManager.default.fileExists(atPath: url.path) else { return }
-        try? FileManager.default.removeItem(at: url)
+        
+        if FileManager.default.fileExists(atPath: url.path) {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
