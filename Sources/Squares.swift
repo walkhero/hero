@@ -35,9 +35,8 @@ public struct Squares: Equatable {
                     try? Data()
                         .adding(size: UInt16.self, collection: update)
                         .write(to: url, options: .atomic)
-                    print("saved")
                 } catch {
-                    print("cancelled")
+                    
                 }
             }
         }
