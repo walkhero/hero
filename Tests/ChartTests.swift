@@ -49,4 +49,16 @@ final class ChartTests: XCTestCase {
         archive.walks.append(.init(timestamp: 0, steps: 3))
         XCTAssertEqual(3, archive.steps.average)
     }
+    
+    func testTrend() {
+        XCTAssertEqual(.stable, archive.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 3))
+        XCTAssertEqual(.stable, archive.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 3))
+        XCTAssertEqual(.stable, archive.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 6))
+        XCTAssertEqual(.increase, archive.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 0))
+        XCTAssertEqual(.decrease, archive.steps.trend)
+    }
 }
