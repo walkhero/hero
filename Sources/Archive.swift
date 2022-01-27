@@ -1,14 +1,17 @@
 import Foundation
 import Archivable
+import Dater
 
 public struct Archive: Arch {
     public var timestamp: UInt32
     public internal(set) var squares: Set<Squares.Item>
     
-    public var calendar: [Days] {
-        walks
-            .map(\.date)
-            .calendar
+    public var calendar: [Days<Bool>] {
+        var dates = walks.map(\.date)
+        return dates
+            .calendar {
+                dates.hits($0)
+            }
     }
     
     public var updated: DateInterval? {

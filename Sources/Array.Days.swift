@@ -1,12 +1,13 @@
 import Foundation
+import Dater
 
-extension Array where Element == Days {
+extension Array where Element == Days<Bool> {
     public var streak: Streak {
         isEmpty
             ? .zero
             : flatMap(\.items)
                 .flatMap { $0 }
-                .map(\.hit)
+                .map(\.content)
                 .dropLast(Calendar.global.daysLeftMonth)
                 .dropLastIfFalse
                 .reduce(.zero) {

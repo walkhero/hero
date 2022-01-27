@@ -10,16 +10,15 @@ final class StreakTests: XCTestCase {
     
     func testEmpty() {
         XCTAssertEqual(.zero, archive.calendar.streak)
-        XCTAssertNotNil(archive.calendar.first?.items.first?.first)
     }
     
     func testStreak() {
-        let daysAgo12 = Calendar.current.date(byAdding: .day, value: -12, to: .init())!
-        let daysAgo8 = Calendar.current.date(byAdding: .day, value: -8, to: .init())!
-        let daysAgo7_5 = Calendar.current.date(byAdding: .hour, value: -12, to: Calendar.current.date(byAdding: .day, value: -7, to: .init())!)!
-        let daysAgo7 = Calendar.current.date(byAdding: .day, value: -7, to: .init())!
-        let daysAgo5 = Calendar.current.date(byAdding: .day, value: -5, to: .init())!
-        let daysAgo3 = Calendar.current.date(byAdding: .day, value: -3, to: .init())!
+        let daysAgo12 = Calendar.global.date(byAdding: .day, value: -12, to: .init())!
+        let daysAgo8 = Calendar.global.date(byAdding: .day, value: -8, to: .init())!
+        let daysAgo7_5 = Calendar.global.date(byAdding: .hour, value: -12, to: Calendar.global.date(byAdding: .day, value: -7, to: .init())!)!
+        let daysAgo7 = Calendar.global.date(byAdding: .day, value: -7, to: .init())!
+        let daysAgo5 = Calendar.global.date(byAdding: .day, value: -5, to: .init())!
+        let daysAgo3 = Calendar.global.date(byAdding: .day, value: -3, to: .init())!
         
         archive.walks = [
             .init(timestamp: daysAgo12.timestamp, duration: 1),
@@ -38,7 +37,7 @@ final class StreakTests: XCTestCase {
         XCTAssertEqual(2, archive.calendar.streak.max)
         XCTAssertEqual(0, archive.calendar.streak.current)
         
-        archive.walks.append(.init(timestamp: Calendar.current.date(byAdding: .day, value: -1, to: .init())!.timestamp, duration: 1))
+        archive.walks.append(.init(timestamp: Calendar.global.date(byAdding: .day, value: -1, to: .init())!.timestamp, duration: 1))
         
         XCTAssertEqual(2, archive.calendar.streak.max)
         XCTAssertEqual(1, archive.calendar.streak.current)
@@ -49,63 +48,16 @@ final class StreakTests: XCTestCase {
         XCTAssertEqual(2, archive.calendar.streak.current)
     }
     
-    func testCalendar() {
-        let monday = Calendar.current.date(from: .init(year: 2021, month: 3, day: 15))!
-        let wednesday = Calendar.current.date(from: .init(year: 2021, month: 3, day: 17))!
-        let thursday = Calendar.current.date(from: .init(year: 2021, month: 3, day: 18))!
-        let saturday = Calendar.current.date(from: .init(year: 2021, month: 3, day: 20))!
-        
-        archive.walks = [
-            .init(timestamp: monday.timestamp, duration: 1),
-            .init(timestamp: wednesday.timestamp, duration: 1),
-            .init(timestamp: thursday.timestamp, duration: 1),
-            .init(timestamp: saturday.timestamp, duration: 1),
-            .init(timestamp: saturday.timestamp, duration: 1)]
-        XCTAssertEqual(.init(year: 2021, month: 3, items: [
-            [.init(value: 1, today: false, hit: false),
-             .init(value: 2, today: false, hit: false),
-             .init(value: 3, today: false, hit: false),
-             .init(value: 4, today: false, hit: false),
-             .init(value: 5, today: false, hit: false),
-             .init(value: 6, today: false, hit: false),
-             .init(value: 7, today: false, hit: false)],
-            [.init(value: 8, today: false, hit: false),
-             .init(value: 9, today: false, hit: false),
-             .init(value: 10, today: false, hit: false),
-             .init(value: 11, today: false, hit: false),
-             .init(value: 12, today: false, hit: false),
-             .init(value: 13, today: false, hit: false),
-             .init(value: 14, today: false, hit: false)],
-            [.init(value: 15, today: false, hit: true),
-             .init(value: 16, today: false, hit: false),
-             .init(value: 17, today: false, hit: true),
-             .init(value: 18, today: false, hit: true),
-             .init(value: 19, today: false, hit: false),
-             .init(value: 20, today: false, hit: true),
-             .init(value: 21, today: false, hit: false)],
-            [.init(value: 22, today: false, hit: false),
-             .init(value: 23, today: false, hit: false),
-             .init(value: 24, today: false, hit: false),
-             .init(value: 25, today: false, hit: false),
-             .init(value: 26, today: false, hit: false),
-             .init(value: 27, today: false, hit: false),
-             .init(value: 28, today: false, hit: false)],
-             [.init(value: 29, today: false, hit: false),
-             .init(value: 30, today: false, hit: false),
-             .init(value: 31, today: false, hit: false)]
-        ]), archive.calendar.first!)
-    }
-    
     func testToday() {
-        let today = Calendar.current.component(.day, from: .init())
+        let today = Calendar.global.component(.day, from: .init())
         XCTAssertEqual(today, archive.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
     }
     
     func testYears() {
-        let date1 = Calendar.current.date(from: .init(year: 2020, month: 12, day: 30, hour: 5))!
-        let date2 = Calendar.current.date(from: .init(year: 2020, month: 12, day: 31, hour: 5))!
-        let date3 = Calendar.current.date(from: .init(year: 2021, month: 1, day: 1, hour: 5))!
-        let date4 = Calendar.current.date(from: .init(year: 2021, month: 1, day: 2, hour: 5))!
+        let date1 = Calendar.global.date(from: .init(year: 2020, month: 12, day: 30, hour: 5))!
+        let date2 = Calendar.global.date(from: .init(year: 2020, month: 12, day: 31, hour: 5))!
+        let date3 = Calendar.global.date(from: .init(year: 2021, month: 1, day: 1, hour: 5))!
+        let date4 = Calendar.global.date(from: .init(year: 2021, month: 1, day: 2, hour: 5))!
         
         archive.walks = [
             .init(timestamp: date1.timestamp, duration: 1),
@@ -139,8 +91,8 @@ final class StreakTests: XCTestCase {
             .calendar
             .first { $0.year == 2021 && $0.month == 1 }!
         
-        XCTAssertTrue(month.items.first![1].hit)
-        XCTAssertTrue(month.items.first![2].hit)
+        XCTAssertTrue(month.items.first![1].content)
+        XCTAssertTrue(month.items.first![2].content)
         
         Calendar.global.timeZone = timezone
     }
