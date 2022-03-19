@@ -1,25 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Dater",
-        "repositoryURL": "https://github.com/archivable/dater.git",
-        "state": {
-          "branch": "main",
-          "revision": "30387e466bc68fc76b0d144d329e82683fae9bb9",
-          "version": null
-        }
-      },
-      {
-        "package": "Archivable",
-        "repositoryURL": "https://github.com/archivable/package.git",
-        "state": {
-          "branch": "main",
-          "revision": "d70e9e58e8b3bad3f9e793acda198ed44e25b656",
-          "version": null
-        }
+  "pins" : [
+    {
+      "identity" : "dater",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/archivable/dater.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "86735924c265b3e889a4836318348c758e7fc03e"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/archivable/package.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "15193042edd33e75875ce5aef64762e466fa7d3e"
+      }
+    }
+  ],
+  "version" : 2
 }
