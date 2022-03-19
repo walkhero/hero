@@ -42,6 +42,10 @@ public struct Archive: Arch {
             }
     }
     
+    public var count: Int {
+        walks.count
+    }
+    
     var walks: [Walk]
     
     public var data: Data {
