@@ -3,12 +3,13 @@ import Archivable
 import Dater
 
 public struct Archive: Arch {
+    public var timestamp: UInt32
+    var walks: [Walk]
+    var squares: Data
+    
     public static var version: UInt8 {
         1
     }
-    
-    public var timestamp: UInt32
-    public internal(set) var squares: Set<Squares.Item>
     
     public var calendar: [Days<Bool>] {
         var dates = walks.map(\.date)
@@ -16,6 +17,11 @@ public struct Archive: Arch {
             .calendar {
                 dates.hits($0)
             }
+    }
+    
+    public var tiles: Set<Squares.Item> {
+        var data = squares
+        return .init(data.collection(size: UInt32.self))
     }
     
     public var updated: DateInterval? {
@@ -50,17 +56,15 @@ public struct Archive: Arch {
         walks.count
     }
     
-    var walks: [Walk]
-    
     public var data: Data {
         .init()
-        .adding(size: UInt32.self, collection: squares)
+        .wrapping(size: UInt32.self, data: squares)
         .adding(size: UInt32.self, collection: walks)
     }
     
     public init() {
         timestamp = 0
-        squares = []
+        squares = .init().adding(UInt32())
         walks = []
     }
     
@@ -69,10 +73,11 @@ public struct Archive: Arch {
         self.timestamp = timestamp
         
         if version == 0 {
-            squares = .init(data.collection(size: UInt32.self))
+            squares = .init()
+                .adding(size: UInt32.self, collection: data.collection(size: UInt32.self) as [Squares.Item])
             walks = (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated)
         } else {
-            squares = .init(data.collection(size: UInt32.self))
+            squares = data.unwrap(size: UInt32.self)
             walks = data.collection(size: UInt32.self)
         }
     }

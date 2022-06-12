@@ -11,7 +11,7 @@ final class ArchiveTests: XCTestCase {
     
     func testParse() async {
         archive = await Archive.prototype(data: archive.compressed)
-        XCTAssertTrue(archive.squares.isEmpty)
+        XCTAssertTrue(archive.tiles.isEmpty)
     }
     
     func testWalks() async {
@@ -26,10 +26,11 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testTiles() async {
-        archive.squares = [.init(x: 456, y: 9870)]
-        archive = await Archive.prototype(data: archive.compressed)
-        XCTAssertEqual(456, archive.squares.first?.x)
-        XCTAssertEqual(9870, archive.squares.first?.y)
+        archive.squares = .init()
+            .adding(size: UInt32.self, collection: [Squares.Item(x: 456, y: 9870)])
+        let tiles = await Archive.prototype(data: archive.compressed).tiles
+        XCTAssertEqual(456, tiles.first?.x)
+        XCTAssertEqual(9870, tiles.first?.y)
     }
     
     func testWalking() {
