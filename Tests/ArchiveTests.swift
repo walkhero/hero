@@ -26,8 +26,7 @@ final class ArchiveTests: XCTestCase {
     }
     
     func testTiles() async {
-        archive.squares = .init()
-            .adding(size: UInt32.self, collection: [Squares.Item(x: 456, y: 9870)])
+        archive.tiles = [.init(x: 456, y: 9870)]
         let tiles = await Archive.prototype(data: archive.compressed).tiles
         XCTAssertEqual(456, tiles.first?.x)
         XCTAssertEqual(9870, tiles.first?.y)

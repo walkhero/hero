@@ -4,11 +4,23 @@ import Dater
 
 public struct Archive: Arch {
     public var timestamp: UInt32
-    var walks: [Walk]
-    var squares: Data
     
     public static var version: UInt8 {
         1
+    }
+    
+    public var tiles: Set<Squares.Item> {
+        get {
+            .init(squares
+                .mutating {
+                    $0
+                        .collection(size: UInt32.self)
+                })
+        }
+        set {
+            squares = .init()
+                .adding(size: UInt32.self, collection: newValue)
+        }
     }
     
     public var calendar: [Days<Bool>] {
@@ -17,11 +29,6 @@ public struct Archive: Arch {
             .calendar {
                 dates.hits($0)
             }
-    }
-    
-    public var tiles: Set<Squares.Item> {
-        var data = squares
-        return .init(data.collection(size: UInt32.self))
     }
     
     public var updated: DateInterval? {
@@ -59,13 +66,30 @@ public struct Archive: Arch {
     public var data: Data {
         .init()
         .wrapping(size: UInt32.self, data: squares)
-        .adding(size: UInt32.self, collection: walks)
+        .wrapping(size: UInt32.self, data: history)
     }
+    
+    var walks: [Walk] {
+        get {
+            history
+                .mutating {
+                    $0
+                        .collection(size: UInt32.self)
+                }
+        }
+        set {
+            history = .init()
+                .adding(size: UInt32.self, collection: newValue)
+        }
+    }
+    
+    private var squares: Data
+    private var history: Data
     
     public init() {
         timestamp = 0
         squares = .init().adding(UInt32())
-        walks = []
+        history = .init().adding(UInt32())
     }
     
     public init(version: UInt8, timestamp: UInt32, data: Data) async {
@@ -75,10 +99,11 @@ public struct Archive: Arch {
         if version == 0 {
             squares = .init()
                 .adding(size: UInt32.self, collection: data.collection(size: UInt32.self) as [Squares.Item])
-            walks = (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated)
+            history = .init()
+                .adding(size: UInt32.self, collection: (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated))
         } else {
             squares = data.unwrap(size: UInt32.self)
-            walks = data.collection(size: UInt32.self)
+            history = data.unwrap(size: UInt32.self)
         }
     }
 }
