@@ -9,6 +9,8 @@ public struct Archive: Arch {
         1
     }
     
+    public internal(set) var walking = UInt32()
+    
     public var tiles: Set<Squares.Item> {
         get {
             .init(squares
@@ -43,20 +45,13 @@ public struct Archive: Arch {
         walks.chart
     }
     
-    public var walking: Date? {
-        walks
-            .last
-            .flatMap {
-                $0.duration == 0 ? .init(timestamp: $0.timestamp) : nil
-            }
-    }
-    
     public var count: Int {
         walks.count
     }
     
     public var data: Data {
         .init()
+        .adding(walking)
         .wrapping(size: UInt32.self, data: squares)
         .wrapping(size: UInt32.self, data: history)
     }
@@ -94,6 +89,7 @@ public struct Archive: Arch {
             history = .init()
                 .adding(size: UInt32.self, collection: (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated))
         } else {
+            
             squares = data.unwrap(size: UInt32.self)
             history = data.unwrap(size: UInt32.self)
         }
