@@ -7,7 +7,7 @@ struct Walk: Storable {
     let duration: UInt16
     let steps: UInt16
     let metres: UInt16
-    let calories: UInt16
+    let calories: UInt32
     
     var data: Data {
         .init()
@@ -36,7 +36,7 @@ struct Walk: Storable {
          duration: UInt16 = 0,
          steps: UInt16 = 0,
          metres: UInt16 = 0,
-         calories: UInt16 = 0) {
+         calories: UInt32 = 0) {
         
         self.timestamp = timestamp
         self.offset = offset
