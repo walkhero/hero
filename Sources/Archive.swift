@@ -3,6 +3,10 @@ import Archivable
 import Dater
 
 public struct Archive: Arch {
+    public static var version: UInt8 {
+        1
+    }
+    
     public var timestamp: UInt32
     public internal(set) var squares: Set<Squares.Item>
     
@@ -63,7 +67,13 @@ public struct Archive: Arch {
     public init(version: UInt8, timestamp: UInt32, data: Data) async {
         var data = data
         self.timestamp = timestamp
-        squares = .init(data.collection(size: UInt32.self))
-        walks = data.collection(size: UInt32.self)
+        
+        if version == 0 {
+            squares = .init(data.collection(size: UInt32.self))
+            walks = (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated)
+        } else {
+            squares = .init(data.collection(size: UInt32.self))
+            walks = data.collection(size: UInt32.self)
+        }
     }
 }
