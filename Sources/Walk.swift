@@ -16,6 +16,7 @@ struct Walk: Storable {
         .adding(duration)
         .adding(steps)
         .adding(metres)
+        .adding(calories)
     }
     
     init() {
