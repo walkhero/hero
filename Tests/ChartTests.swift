@@ -9,24 +9,25 @@ final class ChartTests: XCTestCase {
     }
     
     func testEmpty() {
-        XCTAssertEqual(.zero, archive.steps)
-        XCTAssertEqual(.zero, archive.metres)
+        XCTAssertEqual(.zero, archive.chart.steps)
+        archive.walks.append(.init(timestamp: 0))
+        XCTAssertEqual(.zero, archive.chart.metres)
     }
     
     func testMax() {
         archive.walks.append(.init(timestamp: 0, steps: 1))
-        XCTAssertEqual(1, archive.steps.max)
+        XCTAssertEqual(1, archive.chart.steps.max)
         archive.walks.append(.init(timestamp: 0, steps: 5))
-        XCTAssertEqual(5, archive.steps.max)
+        XCTAssertEqual(5, archive.chart.steps.max)
         archive.walks.append(.init(timestamp: 0, steps: 3))
-        XCTAssertEqual(5, archive.steps.max)
+        XCTAssertEqual(5, archive.chart.steps.max)
     }
     
     func testTotal() {
         archive.walks.append(.init(timestamp: 0, steps: 1))
         archive.walks.append(.init(timestamp: 0, steps: 5))
         archive.walks.append(.init(timestamp: 0, steps: 3))
-        XCTAssertEqual(9, archive.steps.total)
+        XCTAssertEqual(9, archive.chart.steps.total)
     }
     
     func testStepsZero() {
@@ -34,31 +35,36 @@ final class ChartTests: XCTestCase {
             .init(timestamp: 0, duration: 1, steps: 0),
             .init(timestamp: 0, duration: 1, steps: 0),
             .init(timestamp: 0, duration: 1, steps: 0)]
-        XCTAssertEqual([
-                        0,
-                        0,
-                        0], archive.steps.values)
-        XCTAssertEqual(0, archive.steps.max)
+        XCTAssertEqual([], archive.chart.steps.values)
+        XCTAssertEqual(0, archive.chart.steps.max)
     }
     
     func testAverage() {
         archive.walks.append(.init(timestamp: 0, steps: 1))
-        XCTAssertEqual(1, archive.steps.average)
+        XCTAssertEqual(1, archive.chart.steps.average)
         archive.walks.append(.init(timestamp: 0, steps: 5))
-        XCTAssertEqual(3, archive.steps.average)
+        XCTAssertEqual(3, archive.chart.steps.average)
         archive.walks.append(.init(timestamp: 0, steps: 3))
-        XCTAssertEqual(3, archive.steps.average)
+        XCTAssertEqual(3, archive.chart.steps.average)
     }
     
     func testTrend() {
-        XCTAssertEqual(.stable, archive.steps.trend)
-        archive.walks.append(.init(timestamp: 0, steps: 3))
-        XCTAssertEqual(.stable, archive.steps.trend)
-        archive.walks.append(.init(timestamp: 0, steps: 3))
-        XCTAssertEqual(.stable, archive.steps.trend)
+        XCTAssertEqual(.stable, archive.chart.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 4))
+        XCTAssertEqual(.stable, archive.chart.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 4))
+        XCTAssertEqual(.stable, archive.chart.steps.trend)
         archive.walks.append(.init(timestamp: 0, steps: 6))
-        XCTAssertEqual(.increase, archive.steps.trend)
+        XCTAssertEqual(.increase, archive.chart.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 1))
+        XCTAssertEqual(.decrease, archive.chart.steps.trend)
+    }
+    
+    func testIgnoreZero() {
         archive.walks.append(.init(timestamp: 0, steps: 0))
-        XCTAssertEqual(.decrease, archive.steps.trend)
+        archive.walks.append(.init(timestamp: 0, steps: 0))
+        archive.walks.append(.init(timestamp: 0, steps: 10))
+        XCTAssertEqual(10, archive.chart.steps.average)
+        XCTAssertEqual(.stable, archive.chart.steps.trend)
     }
 }

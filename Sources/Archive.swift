@@ -39,16 +39,8 @@ public struct Archive: Arch {
             }
     }
     
-    public var duration: Chart {
-        walks.map { .init($0.duration) }.chart
-    }
-    
-    public var steps: Chart {
-        walks.map { .init($0.steps) }.chart
-    }
-    
-    public var metres: Chart {
-        walks.map { .init($0.metres) }.chart
+    public var chart: Chart {
+        walks.chart
     }
     
     public var walking: Date? {
