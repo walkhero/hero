@@ -26,11 +26,7 @@ public struct Archive: Arch {
     }
     
     public var calendar: [Days<Bool>] {
-        var dates = walks.map(\.date)
-        return dates
-            .calendar {
-                dates.hits($0)
-            }
+        walks.calendar
     }
     
     public var chart: Chart {

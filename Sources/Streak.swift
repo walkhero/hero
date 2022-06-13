@@ -1,7 +1,8 @@
 import Foundation
 
 public struct Streak: Equatable {
-    public static let zero = Self(max: 0, current: 0)
+    static let zero = Self(max: 0, current: 0)
+    
     public let max: Int
     public let current: Int
     

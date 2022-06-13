@@ -2,7 +2,7 @@ import Foundation
 import Dater
 
 extension Array where Element == Days<Bool> {
-    public var streak: Streak {
+    var streak: Streak {
         isEmpty
             ? .zero
             : flatMap(\.items)
