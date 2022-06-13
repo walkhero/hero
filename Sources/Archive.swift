@@ -33,10 +33,6 @@ public struct Archive: Arch {
         walks.chart
     }
     
-    public var count: Int {
-        walks.count
-    }
-    
     public var data: Data {
         .init()
         .adding(walking)
