@@ -3,50 +3,48 @@ import Archivable
 
 extension Cloud where Output == Archive {
     public func start() async {
-        guard model.walks.isEmpty || model.walks.last!.duration > 0 else { return }
-        add(walk: .init())
+        guard model.walking == 0 else { return }
+        model.walking = Date.now.timestamp
         await stream()
     }
     
-    public func finish(steps: Int, metres: Int, squares: Set<Squares.Item>) async -> Summary? {
-        guard model.walking != nil else { return nil }
+    public func finish(steps: Int, metres: Int, calories: Int, squares: Set<Squares.Item>) async -> Summary? {
+        guard model.walking != 0 else { return nil }
         
-        var walks = model.walks
-        let walk = walks.removeLast()
-        let duration = Calendar.global.duration(from: walk.timestamp)
+        let started = model.walking
+        let duration = Calendar.global.duration(from: started)
         let steps = steps < UInt16.max ? UInt16(steps) : .max
         let metres = metres < UInt16.max ? UInt16(metres) : .max
+        let calories = calories < UInt32.max ? UInt32(calories) : .max
         let tiles = model.tiles
         let count = squares.subtracting(tiles).count
         
+        model.walking = 0
+        
         if duration > 0 {
-            model.walks = walks + .init(
-                timestamp: walk.timestamp,
+            model.walks += .init(
+                timestamp: started,
                 duration: duration,
                 steps: steps,
-                metres: metres)
+                metres: metres,
+                calories: calories)
             
             model.tiles = tiles.union(squares)
-        } else {
-            model.walks = walks
         }
         
         await stream()
         
-        return .init(started: .init(timestamp: walk.timestamp),
+        return .init(started: .init(timestamp: started),
                      steps: .init(steps),
                      metres: .init(metres),
+                     calories: .init(calories),
                      squares: count,
                      streak: model.calendar.streak.current)
     }
     
     public func cancel() async {
-        guard model.walking != nil else { return }
+        guard model.walking != 0 else { return }
         model.walks = model.walks.dropLast()
         await stream()
-    }
-    
-    func add(walk: Walk) {
-        model.walks = model.walks + walk
     }
 }

@@ -9,7 +9,7 @@ public struct Archive: Arch {
         1
     }
     
-    public internal(set) var walking = UInt32()
+    public internal(set) var walking: UInt32
     
     public var tiles: Set<Squares.Item> {
         get {
@@ -75,6 +75,7 @@ public struct Archive: Arch {
     
     public init() {
         timestamp = 0
+        walking = 0
         squares = .init().adding(UInt32())
         history = .init().adding(UInt32())
     }
@@ -84,12 +85,13 @@ public struct Archive: Arch {
         self.timestamp = timestamp
         
         if version == 0 {
+            walking = 0
             squares = .init()
                 .adding(size: UInt32.self, collection: data.collection(size: UInt32.self) as [Squares.Item])
             history = .init()
                 .adding(size: UInt32.self, collection: (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated))
         } else {
-            
+            walking = data.number()
             squares = data.unwrap(size: UInt32.self)
             history = data.unwrap(size: UInt32.self)
         }
