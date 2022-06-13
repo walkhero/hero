@@ -6,24 +6,28 @@ public enum Defaults: String {
     premium,
     hide
 
-    public static var froob: Bool {
-        if let created = wasCreated {
-            let days = Calendar.current.dateComponents([.day], from: created, to: .init()).day!
-            return !isPremium && days > 2
-        } else {
-            wasCreated = .init()
-        }
-        return false
+    public static var rate: Bool {
+        wasCreated
+            .map {
+                let days = Calendar.current.dateComponents([.day], from: $0, to: .init()).day!
+                return days > 1
+            }
+        ?? false
     }
     
-    public static var rate: Bool {
-        if let created = wasCreated {
-            let days = Calendar.current.dateComponents([.day], from: created, to: .init()).day!
-            return days > 1
-        } else {
+    public static var froob: Bool {
+        wasCreated
+            .map {
+                let days = Calendar.current.dateComponents([.day], from: $0, to: .init()).day!
+                return days > 2
+            }
+        ?? false
+    }
+    
+    public static func start() {
+        if wasCreated == nil {
             wasCreated = .init()
         }
-        return false
     }
     
     public static var isPremium: Bool {
