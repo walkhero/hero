@@ -13,6 +13,7 @@ final class ArchiveTests: XCTestCase {
         archive = await Archive.prototype(data: archive.compressed)
         XCTAssertTrue(archive.tiles.isEmpty)
         XCTAssertEqual(0, archive.walking)
+        XCTAssertEqual(Display.Key.allCases.count, archive.display.items.count)
     }
     
     func testWalks() async {
@@ -34,5 +35,13 @@ final class ArchiveTests: XCTestCase {
         let tiles = await Archive.prototype(data: archive.compressed).tiles
         XCTAssertEqual(456, tiles.first?.x)
         XCTAssertEqual(9870, tiles.first?.y)
+    }
+    
+    func testDisplay() async {
+        archive.display.items = Display.Key.allCases.reversed().map { .init(key: $0, value: false) }
+        archive = await Archive.prototype(data: archive.compressed)
+        XCTAssertEqual(.index, archive.display.items.first?.key)
+        XCTAssertFalse(archive.display.items.first?.value ?? true)
+        XCTAssertFalse(archive.display.items.last?.value ?? true)
     }
 }

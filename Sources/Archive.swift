@@ -4,12 +4,12 @@ import Dater
 
 public struct Archive: Arch {
     public var timestamp: UInt32
+    public internal(set) var walking: UInt32
+    public internal(set) var display: Display
     
     public static var version: UInt8 {
         1
     }
-    
-    public internal(set) var walking: UInt32
     
     public var tiles: Set<Squares.Item> {
         get {
@@ -44,6 +44,7 @@ public struct Archive: Arch {
     public var data: Data {
         .init()
         .adding(walking)
+        .adding(display)
         .wrapping(size: UInt32.self, data: squares)
         .wrapping(size: UInt32.self, data: history)
     }
@@ -68,6 +69,7 @@ public struct Archive: Arch {
     public init() {
         timestamp = 0
         walking = 0
+        display = .init()
         squares = .init().adding(UInt32())
         history = .init().adding(UInt32())
     }
@@ -77,8 +79,11 @@ public struct Archive: Arch {
         self.timestamp = timestamp
         
         if version == 0 {
+            display = .init()
+            
             squares = .init()
                 .adding(size: UInt32.self, collection: data.collection(size: UInt32.self) as [Squares.Item])
+            
             var walks = (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated)
             
             if walks.last?.duration == 0,
@@ -93,6 +98,7 @@ public struct Archive: Arch {
             
         } else {
             walking = data.number()
+            display = .init(data: &data)
             squares = data.unwrap(size: UInt32.self)
             history = data.unwrap(size: UInt32.self)
         }
