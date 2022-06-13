@@ -9,9 +9,10 @@ final class MigrationTests: XCTestCase {
         archive = .init()
     }
     
-    func testMigrate() async {
+    func testMigrateWalking() async {
         archive.walks = [.init(timestamp: 100, offset: -5, duration: 50, steps: 35, metres: 24),
-                         .init(timestamp: 10, offset: -3, duration: 40, steps: 30, metres: 26)]
+                         .init(timestamp: 10, offset: -3, duration: 40, steps: 30, metres: 26),
+                         .init(timestamp: 7)]
         
         let migrated = await Archive.prototype(data: archive.compressed)
         XCTAssertEqual(2, migrated.walks.count)
@@ -27,5 +28,17 @@ final class MigrationTests: XCTestCase {
         XCTAssertEqual(30, migrated.walks.last?.steps)
         XCTAssertEqual(26, migrated.walks.last?.metres)
         XCTAssertEqual(0, migrated.walks.last?.calories)
+        XCTAssertEqual(7, migrated.walking)
+    }
+    
+    func testMigrateNotWalking() async {
+        archive.walks = [.init(timestamp: 100, offset: -5, duration: 50, steps: 35, metres: 24),
+                         .init(timestamp: 10, offset: -3, duration: 40, steps: 30, metres: 26)]
+        
+        let migrated = await Archive.prototype(data: archive.compressed)
+        XCTAssertEqual(2, migrated.walks.count)
+        XCTAssertEqual(100, migrated.walks.first?.timestamp)
+        XCTAssertEqual(10, migrated.walks.last?.timestamp)
+        XCTAssertEqual(0, migrated.walking)
     }
 }

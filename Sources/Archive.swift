@@ -77,11 +77,20 @@ public struct Archive: Arch {
         self.timestamp = timestamp
         
         if version == 0 {
-            walking = 0
             squares = .init()
                 .adding(size: UInt32.self, collection: data.collection(size: UInt32.self) as [Squares.Item])
+            var walks = (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated)
+            
+            if walks.last?.duration == 0,
+               let timestamp = walks.popLast()?.timestamp {
+                walking = timestamp
+            } else {
+                walking = 0
+            }
+            
             history = .init()
-                .adding(size: UInt32.self, collection: (data.collection(size: UInt32.self) as [Walk_v0]).map(\.migrated))
+                .adding(size: UInt32.self, collection: walks)
+            
         } else {
             walking = data.number()
             squares = data.unwrap(size: UInt32.self)
