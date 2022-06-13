@@ -30,7 +30,7 @@ public struct Archive: Arch {
     }
     
     public var chart: Chart {
-        walks.chart
+        walks.chart(squares: tiles.count)
     }
     
     public var data: Data {

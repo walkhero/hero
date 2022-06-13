@@ -6,7 +6,8 @@ public struct Chart: Equatable {
                                   steps: .zero,
                                   metres: .zero,
                                   calories: .zero,
-                                  count: 0,
+                                  squares: 0,
+                                  walks: 0,
                                   updated: nil)
     
     public let streak: Streak
@@ -14,6 +15,7 @@ public struct Chart: Equatable {
     public let steps: Item
     public let metres: Item
     public let calories: Item
-    public let count: Int
+    public let squares: Int
+    public let walks: Int
     public let updated: DateInterval?
 }

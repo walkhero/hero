@@ -10,13 +10,14 @@ extension Array where Element == Walk {
             }
     }
     
-    var chart: Chart {
+    func chart(squares: Int) -> Chart {
         .init(streak: calendar.streak,
               duration: compactMap { $0.duration == 0 ? nil : Int($0.duration) }.item,
               steps: compactMap { $0.steps == 0 ? nil : Int($0.steps) }.item,
               metres: compactMap { $0.metres == 0 ? nil : Int($0.metres) }.item,
               calories: compactMap { $0.calories == 0 ? nil : Int($0.calories) }.item,
-              count: count,
+              squares: squares,
+              walks: count,
               updated: last.map { .init(start: .init(timestamp: $0.timestamp), duration: .init($0.duration)) })
     }
 }
