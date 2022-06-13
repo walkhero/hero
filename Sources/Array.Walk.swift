@@ -13,7 +13,10 @@ extension Array where Element == Walk {
         }.item,
               calories: compactMap {
             $0.calories == 0 ? nil : Int($0.calories)
-        }.item)
+        }.item,
+              updated: last.map {
+            .init(start: .init(timestamp: $0.timestamp), duration: .init($0.duration))
+        })
     }
 }
 
