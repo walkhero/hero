@@ -1,10 +1,12 @@
 import Foundation
+import Archivable
 
 public enum Defaults: String {
     case
     created,
     premium,
-    hide
+    hide,
+    display
 
     public static var rate: Bool {
         wasCreated
@@ -43,6 +45,11 @@ public enum Defaults: String {
     static var wasCreated: Date? {
         get { self[.created] as? Date }
         set { self[.created] = newValue }
+    }
+    
+    static var items: Display {
+        get { (self[.display] as? Data).map { $0.prototype() } ?? .init() }
+        set { self[.display] = newValue.data }
     }
     
     private static subscript(_ key: Self) -> Any? {
