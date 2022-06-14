@@ -42,14 +42,14 @@ public enum Defaults: String {
         set { self[.hide] = newValue }
     }
     
+    public static var items: Display {
+        get { (self[.display] as? Data).map { $0.prototype() } ?? .init() }
+        set { self[.display] = newValue.data }
+    }
+    
     static var wasCreated: Date? {
         get { self[.created] as? Date }
         set { self[.created] = newValue }
-    }
-    
-    static var items: Display {
-        get { (self[.display] as? Data).map { $0.prototype() } ?? .init() }
-        set { self[.display] = newValue.data }
     }
     
     private static subscript(_ key: Self) -> Any? {
