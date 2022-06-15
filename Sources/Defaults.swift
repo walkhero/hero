@@ -4,9 +4,7 @@ import Archivable
 public enum Defaults: String {
     case
     created,
-    premium,
-    hide,
-    display
+    premium
 
     public static var rate: Bool {
         wasCreated
@@ -35,16 +33,6 @@ public enum Defaults: String {
     public static var isPremium: Bool {
         get { self[.premium] as? Bool ?? false }
         set { self[.premium] = newValue }
-    }
-    
-    public static var shouldHide: Bool {
-        get { self[.hide] as? Bool ?? true }
-        set { self[.hide] = newValue }
-    }
-    
-    public static var items: Display {
-        get { (self[.display] as? Data).map { $0.prototype() } ?? .init() }
-        set { self[.display] = newValue.data }
     }
     
     static var wasCreated: Date? {
