@@ -2,16 +2,8 @@ import Foundation
 import Dater
 
 extension Array where Element == Walk {
-    var calendar: [Days<Bool>] {
-        var dates = map(\.date)
-        return dates
-            .calendar {
-                dates.hits($0)
-            }
-    }
-    
-    func chart(squares: Int) -> Chart {
-        .init(streak: calendar.streak,
+    func chart(squares: Int, walking: UInt32) -> Chart {
+        .init(streak: (map(\.date) + (walking == 0 ? [] : [.init(timestamp: walking)])).calendar.streak,
               duration: compactMap { $0.duration == 0 ? nil : Int($0.duration) }.item,
               steps: compactMap { $0.steps == 0 ? nil : Int($0.steps) }.item,
               metres: compactMap { $0.metres == 0 ? nil : Int($0.metres) }.item,

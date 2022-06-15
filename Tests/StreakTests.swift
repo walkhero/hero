@@ -96,4 +96,18 @@ final class StreakTests: XCTestCase {
         
         Calendar.global.timeZone = timezone
     }
+    
+    func testWalking() {
+        XCTAssertEqual(0, archive.chart.streak.current)
+        archive.walking = .now
+        XCTAssertEqual(1, archive.chart.streak.current)
+        archive.walks = [.init(timestamp: .now)]
+        XCTAssertEqual(1, archive.chart.streak.current)
+        archive.walks = [.init(timestamp: Calendar.global.date(byAdding: .day, value: -1, to: .now)!.timestamp)]
+        XCTAssertEqual(2, archive.chart.streak.current)
+        archive.walks = [.init(timestamp: Calendar.global.date(byAdding: .day, value: -2, to: .now)!.timestamp)]
+        XCTAssertEqual(1, archive.chart.streak.current)
+        archive.walking = 0
+        XCTAssertEqual(0, archive.chart.streak.current)
+    }
 }

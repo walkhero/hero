@@ -25,11 +25,11 @@ public struct Archive: Arch {
     }
     
     public var calendar: [Days<Bool>] {
-        walks.calendar
+        walks.map(\.date).calendar
     }
     
     public var chart: Chart {
-        walks.chart(squares: tiles.count)
+        walks.chart(squares: tiles.count, walking: walking)
     }
     
     public var data: Data {
