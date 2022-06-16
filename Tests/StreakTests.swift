@@ -9,7 +9,7 @@ final class StreakTests: XCTestCase {
     }
     
     func testEmpty() {
-        XCTAssertEqual(.zero, archive.calendar.streak)
+        XCTAssertEqual(0, archive.calendar.streak.max)
     }
     
     func testStreak() {

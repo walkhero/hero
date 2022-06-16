@@ -18,8 +18,12 @@ extension Leaf {
         palladium,
         gold,
         platinum,
-        rhodium,
         silicon,
         fortytwo
+        
+        var next: Self {
+            let index = Self.allCases.firstIndex(of: self)!
+            return index < Self.allCases.count - 1 ? Self.allCases[index + 1] : .fortytwo
+        }
     }
 }
