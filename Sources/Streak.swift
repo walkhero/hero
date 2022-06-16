@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Streak: Equatable {
+public struct Streak {
     static let zero = Self(max: 0, current: 0)
     
     public let max: Int

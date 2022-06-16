@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Chart: Equatable {
+public struct Chart {
     public static let zero = Self(streak: .zero,
                                   duration: .zero,
                                   steps: .zero,

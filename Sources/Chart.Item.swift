@@ -1,7 +1,7 @@
 import Foundation
 
 extension Chart {
-    public struct Item: Equatable {
+    public struct Item {
         static let zero = Self(values: [], total: 0, max: 0, average: 0, trend: .stable)
         
         public let values: [Double]
