@@ -3,7 +3,7 @@ import CoreLocation
 
 public struct Squares: Equatable {
     public private(set) var items = Set<Item>()
-    var task: Task<Void, Never>?
+    private(set) var task: Task<Void, Never>?
     let url: URL
     
     public init() {
@@ -32,12 +32,10 @@ public struct Squares: Equatable {
             task = Task { [url] in
                 do {
                     try await Task.sleep(nanoseconds: 1000_000_000)
-                    try? Data()
+                    try Data()
                         .adding(size: UInt16.self, collection: update)
                         .write(to: url, options: .atomic)
-                } catch {
-                    
-                }
+                } catch { }
             }
         }
     }
