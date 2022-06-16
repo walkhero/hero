@@ -29,7 +29,7 @@ public struct Archive: Arch {
     }
     
     public var chart: Chart {
-        walks.chart(squares: tiles.count, walking: walking > 0)
+        walks.chart(walking: walking > 0)
     }
     
     public var data: Data {

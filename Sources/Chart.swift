@@ -6,7 +6,6 @@ public struct Chart {
                                   steps: .zero,
                                   metres: .zero,
                                   calories: .zero,
-                                  squares: 0,
                                   walks: 0,
                                   updated: nil)
     
@@ -15,7 +14,6 @@ public struct Chart {
     public let steps: Item
     public let metres: Item
     public let calories: Item
-    public let squares: Int
     public let walks: Int
     public let updated: DateInterval?
 }
