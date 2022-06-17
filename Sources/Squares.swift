@@ -19,29 +19,31 @@ public struct Squares: Equatable {
         }
     }
     
-    public mutating func add(locations: [CLLocation]) {
+    public mutating func add(locations: [CLLocation]) -> Bool {
         let update = items
             .union(locations
                     .map(\.coordinate)
                     .map(Item.init))
         
-        if update != items {
-            items = update
-            
-            task?.cancel()
-            task = Task { [url] in
-                do {
-                    try await Task.sleep(nanoseconds: 1000_000_000)
-                    
-                    guard !Task.isCancelled else { return }
-                    
-                    try Data()
-                        .adding(size: UInt16.self, collection: update)
-                        .write(to: url, options: .atomic)
-                    
-                } catch { }
-            }
+        guard update != items else { return false }
+        
+        items = update
+        
+        task?.cancel()
+        task = Task { [url] in
+            do {
+                try await Task.sleep(nanoseconds: 1000_000_000)
+                
+                guard !Task.isCancelled else { return }
+                
+                try Data()
+                    .adding(size: UInt16.self, collection: update)
+                    .write(to: url, options: .atomic)
+                
+            } catch { }
         }
+        
+        return true
     }
     
     public mutating func clear() {
