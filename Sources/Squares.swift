@@ -32,9 +32,13 @@ public struct Squares: Equatable {
             task = Task { [url] in
                 do {
                     try await Task.sleep(nanoseconds: 1000_000_000)
+                    
+                    guard !Task.isCancelled else { return }
+                    
                     try Data()
                         .adding(size: UInt16.self, collection: update)
                         .write(to: url, options: .atomic)
+                    
                 } catch { }
             }
         }
