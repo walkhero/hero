@@ -96,6 +96,7 @@ final class CloudTests: XCTestCase {
         await cloud.cancel()
         let model = await cloud.model
         XCTAssertEqual(1, model.walks.count)
+        XCTAssertEqual(0, model.walking)
     }
     
     func testCancel() async {
@@ -103,6 +104,7 @@ final class CloudTests: XCTestCase {
         await cloud.cancel()
         let model = await cloud.model
         XCTAssertTrue(model.walks.isEmpty)
+        XCTAssertEqual(0, model.walking)
     }
     
     func testSummary() async {

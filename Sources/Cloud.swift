@@ -44,7 +44,7 @@ extension Cloud where Output == Archive {
     
     public func cancel() async {
         guard model.walking != 0 else { return }
-        model.walks = model.walks.dropLast()
+        model.walking = 0
         await stream()
     }
 }
