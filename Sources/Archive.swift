@@ -1,6 +1,5 @@
 import Foundation
 import Archivable
-import Dater
 
 public struct Archive: Arch {
     public var timestamp: UInt32
@@ -22,10 +21,6 @@ public struct Archive: Arch {
             squares = .init()
                 .adding(size: UInt32.self, collection: newValue)
         }
-    }
-    
-    public var calendar: [Days<Bool>] {
-        walks.map(\.date).calendar
     }
     
     public var chart: Chart {

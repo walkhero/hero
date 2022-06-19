@@ -3,12 +3,11 @@ import Dater
 
 extension Array where Element == Walk {
     func chart(walking: Bool) -> Chart {
-        .init(streak: (map(\.date) + (walking ? [.now] : [])).calendar.streak,
+        .init(walks: map(\.date) + (walking ? [.now] : []),
               duration: compactMap { $0.duration == 0 ? nil : Int($0.duration) }.item,
               steps: compactMap { $0.steps == 0 ? nil : Int($0.steps) }.item,
               metres: compactMap { $0.metres == 0 ? nil : Int($0.metres) }.item,
               calories: compactMap { $0.calories == 0 ? nil : Int($0.calories) }.item,
-              walks: count,
               updated: last.map { .init(start: .init(timestamp: $0.timestamp), duration: .init($0.duration)) })
     }
 }

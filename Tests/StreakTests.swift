@@ -9,7 +9,7 @@ final class StreakTests: XCTestCase {
     }
     
     func testEmpty() {
-        XCTAssertEqual(0, archive.calendar.streak.max)
+        XCTAssertEqual(0, archive.chart.streak.max)
     }
     
     func testStreak() {
@@ -34,23 +34,23 @@ final class StreakTests: XCTestCase {
             .init(timestamp: daysAgo5.timestamp, duration: 1),
             .init(timestamp: daysAgo3.timestamp, duration: 1)]
         
-        XCTAssertEqual(2, archive.calendar.streak.max)
-        XCTAssertEqual(0, archive.calendar.streak.current)
+        XCTAssertEqual(2, archive.chart.streak.max)
+        XCTAssertEqual(0, archive.chart.streak.current)
         
         archive.walks.append(.init(timestamp: Calendar.global.date(byAdding: .day, value: -1, to: .init())!.timestamp, duration: 1))
         
-        XCTAssertEqual(2, archive.calendar.streak.max)
-        XCTAssertEqual(1, archive.calendar.streak.current)
+        XCTAssertEqual(2, archive.chart.streak.max)
+        XCTAssertEqual(1, archive.chart.streak.current)
         
         archive.walks.append(.init(timestamp: Date.now.timestamp, duration: 1))
         
-        XCTAssertEqual(2, archive.calendar.streak.max)
-        XCTAssertEqual(2, archive.calendar.streak.current)
+        XCTAssertEqual(2, archive.chart.streak.max)
+        XCTAssertEqual(2, archive.chart.streak.current)
     }
     
     func testToday() {
         let today = Calendar.global.component(.day, from: .init())
-        XCTAssertEqual(today, archive.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
+        XCTAssertEqual(today, archive.chart.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
     }
     
     func testYears() {
@@ -66,7 +66,7 @@ final class StreakTests: XCTestCase {
             .init(timestamp: date4.timestamp, duration: 1)
         ]
         
-        XCTAssertEqual(4, archive.calendar.streak.max)
+        XCTAssertEqual(4, archive.chart.streak.max)
     }
     
     func testTimezones() {
@@ -85,9 +85,10 @@ final class StreakTests: XCTestCase {
         archive.walks = [walk1, walk2]
         
         Calendar.global.timeZone = berlin
-        XCTAssertEqual(2, archive.calendar.streak.max)
+        XCTAssertEqual(2, archive.chart.streak.max)
         
         let month = archive
+            .chart
             .calendar
             .first { $0.year == 2021 && $0.month == 1 }!
         

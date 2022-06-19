@@ -39,7 +39,7 @@ extension Cloud where Output == Archive {
                      metres: .init(metres),
                      calories: .init(calories),
                      squares: count,
-                     streak: model.calendar.streak.current)
+                     streak: model.walks.map(\.date).calendar.streak.current)
     }
     
     public func cancel() async {
