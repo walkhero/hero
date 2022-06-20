@@ -49,11 +49,6 @@ final class StreakTests: XCTestCase {
         XCTAssertEqual(2, archive.chart.streak.current)
     }
     
-    func testToday() {
-        let today = Calendar.global.component(.day, from: .init())
-        XCTAssertEqual(.init(today), archive.chart.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
-    }
-    
     func testYears() {
         let date1 = Calendar.global.date(from: .init(year: 2020, month: 12, day: 30, hour: 5))!
         let date2 = Calendar.global.date(from: .init(year: 2020, month: 12, day: 31, hour: 5))!
