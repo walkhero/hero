@@ -50,7 +50,7 @@ final class StreakTests: XCTestCase {
     
     func testToday() {
         let today = Calendar.global.component(.day, from: .init())
-        XCTAssertEqual(today, archive.chart.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
+        XCTAssertEqual(.init(today), archive.chart.calendar.first?.items.flatMap { $0 }.first { $0.today }?.value)
     }
     
     func testYears() {
