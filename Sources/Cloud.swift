@@ -18,11 +18,13 @@ extension Cloud where Output == Archive {
         let calories = calories < UInt32.max ? UInt32(calories) : .max
         let tiles = model.tiles
         let count = squares.subtracting(tiles).count
+        let walks = model.walks
+        var total = walks.count
         
         model.walking = 0
         
         if duration > 0 {
-            model.walks += .init(
+            model.walks = walks + .init(
                 timestamp: started,
                 duration: duration,
                 steps: steps,
@@ -30,12 +32,13 @@ extension Cloud where Output == Archive {
                 calories: calories)
             
             model.tiles = tiles.union(squares)
+            total += 1
         }
         
         await stream()
         
         return .init(duration: .init(duration),
-                     walks: model.walks.count,
+                     walks: total,
                      steps: .init(steps),
                      metres: .init(metres),
                      calories: .init(calories),
