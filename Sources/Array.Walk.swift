@@ -15,8 +15,7 @@ extension Array where Element == Walk {
 private extension Array where Element == Int {
     var item: Chart.Item {
         { max, sum, average, previous in
-            .init(values: map { max > 0 ? .init($0) / Double(max) : 0 },
-                  total: sum,
+            .init(total: sum,
                   max: max,
                   average: average,
                   trend: count > 1

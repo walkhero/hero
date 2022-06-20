@@ -9,9 +9,8 @@ final class ChartTests: XCTestCase {
     }
     
     func testEmpty() {
-        XCTAssertTrue(archive.chart.steps.values.isEmpty)
-        archive.walks.append(.init(timestamp: 0))
-        XCTAssertTrue(archive.chart.metres.values.isEmpty)
+        XCTAssertEqual(0, archive.chart.walks)
+        XCTAssertEqual(0, archive.chart.steps.total)
     }
     
     func testMax() {
@@ -35,7 +34,6 @@ final class ChartTests: XCTestCase {
             .init(timestamp: 0, duration: 1, steps: 0),
             .init(timestamp: 0, duration: 1, steps: 0),
             .init(timestamp: 0, duration: 1, steps: 0)]
-        XCTAssertEqual([], archive.chart.steps.values)
         XCTAssertEqual(0, archive.chart.steps.max)
     }
     
