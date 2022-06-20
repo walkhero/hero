@@ -34,7 +34,7 @@ extension Cloud where Output == Archive {
         
         await stream()
         
-        return .init(started: .init(timestamp: started),
+        return .init(duration: .init(duration),
                      steps: .init(steps),
                      metres: .init(metres),
                      calories: .init(calories),

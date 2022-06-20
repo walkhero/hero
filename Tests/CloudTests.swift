@@ -120,7 +120,7 @@ final class CloudTests: XCTestCase {
             .init(x: 99, y: 77),
             .init(x: 99, y: 76)])
         
-        XCTAssertEqual(date.timestamp, summary?.started.timestamp)
+        XCTAssertEqual(2, summary?.duration)
         XCTAssertEqual(3, summary?.steps)
         XCTAssertEqual(5, summary?.metres)
         XCTAssertEqual(1, summary?.squares)
