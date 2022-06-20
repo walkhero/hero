@@ -121,6 +121,7 @@ final class CloudTests: XCTestCase {
             .init(x: 99, y: 76)])
         
         XCTAssertEqual(2, summary?.duration)
+        XCTAssertEqual(3, summary?.walks)
         XCTAssertEqual(3, summary?.steps)
         XCTAssertEqual(5, summary?.metres)
         XCTAssertEqual(1, summary?.squares)
