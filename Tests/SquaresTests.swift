@@ -14,8 +14,8 @@ final class SquaresTests: XCTestCase {
         try? FileManager.default.removeItem(at: squares.url)
     }
     
-    func testAdd() {
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2),
+    func testAdd() async {
+        _ = await squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
         XCTAssertEqual(2, squares.items.count)
     }
@@ -23,8 +23,11 @@ final class SquaresTests: XCTestCase {
     func testCache() {
         let expect = expectation(description: "")
         XCTAssertFalse(FileManager.default.fileExists(atPath: squares.url.path))
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2),
-                                .init(latitude: 2, longitude: 1)])
+        
+        Task {
+            _ = await squares.add(locations: [.init(latitude: 1, longitude: 2),
+                                    .init(latitude: 2, longitude: 1)])
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
             XCTAssertTrue(FileManager.default.fileExists(atPath: self.squares.url.path))
@@ -34,23 +37,23 @@ final class SquaresTests: XCTestCase {
         waitForExpectations(timeout: 2)
     }
     
-    func testCacheDebounce() {
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 2, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 3, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 4, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 5, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 6, longitude: 2)])
-        _ = squares.add(locations: [.init(latitude: 7, longitude: 2)])
+    func testCacheDebounce() async {
+        _ = await squares.add(locations: [.init(latitude: 1, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 2, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 3, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 4, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 5, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 6, longitude: 2)])
+        _ = await squares.add(locations: [.init(latitude: 7, longitude: 2)])
         XCTAssertFalse(FileManager.default.fileExists(atPath: squares.url.path))
     }
     
-    func testSaveOnlyUpdates() {
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2),
+    func testSaveOnlyUpdates() async {
+        _ = await squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
         try? FileManager.default.removeItem(at: squares.url)
         
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2),
+        _ = await squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
         
         XCTAssertFalse(FileManager.default.fileExists(atPath: squares.url.path))
@@ -64,10 +67,10 @@ final class SquaresTests: XCTestCase {
         XCTAssertEqual(Squares().items, .init(items))
     }
     
-    func testClear() {
-        _ = squares.add(locations: [.init(latitude: 1, longitude: 2),
+    func testClear() async {
+        _ = await squares.add(locations: [.init(latitude: 1, longitude: 2),
                                 .init(latitude: 2, longitude: 1)])
-        squares.clear()
+        await squares.clear()
         XCTAssertTrue(squares.task!.isCancelled)
         XCTAssertTrue(squares.items.isEmpty)
         XCTAssertFalse(FileManager.default.fileExists(atPath: squares.url.path))

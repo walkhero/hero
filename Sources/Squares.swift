@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-public struct Squares: Equatable {
+public struct Squares {
     public private(set) var items = Set<Item>()
     private(set) var task: Task<Void, Never>?
     let url: URL
@@ -19,7 +19,7 @@ public struct Squares: Equatable {
         }
     }
     
-    public mutating func add(locations: [CLLocation]) -> Bool {
+    @MainActor public mutating func add(locations: [CLLocation]) -> Bool {
         let update = items
             .union(locations
                     .map(\.coordinate)
@@ -46,16 +46,12 @@ public struct Squares: Equatable {
         return true
     }
     
-    public mutating func clear() {
+    @MainActor public mutating func clear() {
         task?.cancel()
         items = []
         
         if FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.removeItem(at: url)
         }
-    }
-    
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.items == rhs.items
     }
 }
