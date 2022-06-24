@@ -6,6 +6,8 @@ public struct Leaf {
     public let name: Name
     public let squares: Int
     public let next: Int
+    public let current: Int
+    public let total: Int
     
     public var badges: [(name: Name, squares: Int)] {
         Name
@@ -19,7 +21,10 @@ public struct Leaf {
     
     public init(squares: Int) {
         name = Self.name(for: squares)
-        next = Self.next(for: name)
+        let next = name.next
+        self.next = Self.map[next]!
+        self.total = self.next - Self.map[name]!
+        current = squares - Self.map[name]!
         self.squares = squares
     }
     
@@ -33,10 +38,6 @@ public struct Leaf {
             }?
             .key
         ?? .fortytwo
-    }
-    
-    private static func next(for name: Name) -> Int {
-        map[name.next]!
     }
     
     private static func generate() -> [Name : Int] {

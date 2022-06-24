@@ -55,4 +55,14 @@ final class LeafTests: XCTestCase {
         XCTAssertEqual(1_223_456, leaf.squares)
         XCTAssertEqual(Int(pow(2, 21) as Double), leaf.next)
     }
+    
+    func testProgress() {
+        var leaf = Leaf(squares: 128)
+        XCTAssertEqual(0, leaf.current)
+        XCTAssertEqual(128, leaf.total)
+        
+        leaf = Leaf(squares: 129)
+        XCTAssertEqual(1, leaf.current)
+        XCTAssertEqual(128, leaf.total)
+    }
 }
