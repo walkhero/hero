@@ -30,12 +30,12 @@ final class SquaresTests: XCTestCase {
                                     .init(latitude: 2, longitude: 1)])
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
             XCTAssertTrue(FileManager.default.fileExists(atPath: Squares.url.path))
             expect.fulfill()
         }
         
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 1.2)
     }
     
     func testCacheDebounce() async {
