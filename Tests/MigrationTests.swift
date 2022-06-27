@@ -14,7 +14,7 @@ final class MigrationTests: XCTestCase {
                          .init(timestamp: 10, offset: -3, duration: 40, steps: 30, metres: 26),
                          .init(timestamp: 7)]
         
-        let migrated = await Archive.prototype(data: archive.compressed)
+        let migrated = await Archive.init(version: Archive_v0.version, timestamp: archive.timestamp, data: archive.data)
         XCTAssertEqual(2, migrated.walks.count)
         XCTAssertEqual(100, migrated.walks.first?.timestamp)
         XCTAssertEqual(-5, migrated.walks.first?.offset)
@@ -35,7 +35,7 @@ final class MigrationTests: XCTestCase {
         archive.walks = [.init(timestamp: 100, offset: -5, duration: 50, steps: 35, metres: 24),
                          .init(timestamp: 10, offset: -3, duration: 40, steps: 30, metres: 26)]
         
-        let migrated = await Archive.prototype(data: archive.compressed)
+        let migrated = await Archive.init(version: Archive_v0.version, timestamp: archive.timestamp, data: archive.data)
         XCTAssertEqual(2, migrated.walks.count)
         XCTAssertEqual(100, migrated.walks.first?.timestamp)
         XCTAssertEqual(10, migrated.walks.last?.timestamp)
