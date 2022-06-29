@@ -4,6 +4,7 @@ public struct Leaf {
     private static let map = generate()
     
     public let name: Name
+    public let value: Int
     public let squares: Int
     public let next: Int
     public let current: Int
@@ -21,10 +22,11 @@ public struct Leaf {
     
     public init(squares: Int) {
         name = Self.name(for: squares)
+        value = Self.map[name]!
+        current = squares - value
         let next = name.next
         self.next = Self.map[next]!
-        self.total = self.next - Self.map[name]!
-        current = squares - Self.map[name]!
+        self.total = self.next - value
         self.squares = squares
     }
     

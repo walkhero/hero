@@ -10,9 +10,10 @@ final class LeafTests: XCTestCase {
     }
     
     func testEarth() {
-        let leaf = Leaf(squares: 128)
+        let leaf = Leaf(squares: 129)
         XCTAssertEqual(.earth, leaf.name)
-        XCTAssertEqual(128, leaf.squares)
+        XCTAssertEqual(129, leaf.squares)
+        XCTAssertEqual(128, leaf.value)
         XCTAssertEqual(Int(pow(2, 8) as Double), leaf.next)
     }
     
