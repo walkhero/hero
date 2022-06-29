@@ -1,6 +1,7 @@
 import Foundation
 
-public struct Summary: Identifiable {
+public struct Summary {
+    public let leaf: Leaf?
     public let duration: Int
     public let walks: Int
     public let steps: Int
@@ -8,5 +9,4 @@ public struct Summary: Identifiable {
     public let calories: Int
     public let squares: Int
     public let streak: Int
-    public let id = UUID()
 }
