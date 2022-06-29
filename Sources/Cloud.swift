@@ -35,7 +35,10 @@ extension Cloud where Output == Archive {
             total += 1
         }
         
-        await stream()
+        Task
+            .detached { [weak self] in
+                await self?.stream()
+            }
         
         return .init(duration: .init(duration),
                      walks: total,
