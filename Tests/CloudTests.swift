@@ -106,57 +106,6 @@ final class CloudTests: XCTestCase {
         XCTAssertTrue(model.walks.isEmpty)
         XCTAssertEqual(0, model.walking)
     }
-    
-    func testSummary() async {
-        let yesterday = Calendar.global.date(byAdding: .day, value: -1, to: .now)!
-        await cloud.add(walk: .init(timestamp: yesterday.timestamp))
-        
-        await cloud.walking(timestamp: Date(timeIntervalSinceNow: -20).timestamp)
-        _ = await cloud.finish(steps: 0, metres: 0, calories: 4, squares: [.init(x: 99, y: 76)])
-        
-        let date = Date(timeIntervalSinceNow: -2)
-        await cloud.walking(timestamp: date.timestamp)
-        let summary = await cloud.finish(steps: 3, metres: 5, calories: 6, squares: [
-            .init(x: 99, y: 77),
-            .init(x: 99, y: 76)])
-        
-        XCTAssertEqual(2, summary?.duration)
-        XCTAssertEqual(3, summary?.walks)
-        XCTAssertEqual(3, summary?.steps)
-        XCTAssertEqual(5, summary?.metres)
-        XCTAssertEqual(1, summary?.squares)
-        XCTAssertEqual(2, summary?.streak)
-        XCTAssertEqual(6, summary?.calories)
-    }
-    
-    func testLeaf() async {
-        await cloud.walking(timestamp: .now - 6)
-        var summary = await cloud.finish(steps: 0,
-                                         metres: 0,
-                                         calories: 4,
-                                         squares: [])
-        
-        XCTAssertNil(summary?.leaf)
-        
-        await cloud.walking(timestamp: .now - 4)
-        summary = await cloud.finish(steps: 0,
-                                     metres: 0,
-                                     calories: 4,
-                                     squares: .init((0 ... 126)
-                                        .map {
-                                            .init(x: $0, y: $0)
-                                        }))
-        
-        XCTAssertNil(summary?.leaf)
-        
-        await cloud.walking(timestamp: .now - 2)
-        summary = await cloud.finish(steps: 0,
-                                     metres: 0,
-                                     calories: 4,
-                                     squares: [.init(x: 127, y: 127)])
-        
-        XCTAssertEqual(.earth, summary?.leaf?.name)
-    }
 }
 
 private extension Cloud where Output == Archive {
