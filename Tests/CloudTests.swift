@@ -29,7 +29,7 @@ final class CloudTests: XCTestCase {
     
     func testFinishNoDuration() async {
         await cloud.start()
-        _ = await cloud.finish(steps: 0, metres: 0, calories: 0, squares: [.init(x: 0, y: 0)])
+        _ = await cloud.finish(duration: 0, steps: 0, metres: 0, calories: 0, squares: [.init(x: 0, y: 0)])
         let model = await cloud.model
         XCTAssertTrue(model.walks.isEmpty)
         XCTAssertTrue(model.tiles.isEmpty)
@@ -38,7 +38,7 @@ final class CloudTests: XCTestCase {
     
     func testFinish() async {
         await cloud.walking(timestamp: Date(timeIntervalSinceNow: -1).timestamp)
-        _ = await cloud.finish(steps: 3, metres: 5, calories: 2, squares: [.init(x: 99, y: 77)])
+        _ = await cloud.finish(duration: 1, steps: 3, metres: 5, calories: 2, squares: [.init(x: 99, y: 77)])
         let model = await cloud.model
         XCTAssertEqual(1, model.walks.count)
         XCTAssertEqual(1, model.tiles.count)
@@ -52,9 +52,9 @@ final class CloudTests: XCTestCase {
     
     func testFinishTiles() async {
         await cloud.walking(timestamp: Date(timeIntervalSinceNow: -2).timestamp)
-        _ = await cloud.finish(steps: 0, metres: 0, calories: 0, squares: [.init(x: 99, y: 77)])
+        _ = await cloud.finish(duration: 2, steps: 0, metres: 0, calories: 0, squares: [.init(x: 99, y: 77)])
         await cloud.walking(timestamp: Date(timeIntervalSinceNow: -1).timestamp)
-        _ = await cloud.finish(steps: 0, metres: 0, calories: 0, squares: [.init(x: 77, y: 99)])
+        _ = await cloud.finish(duration: 1, steps: 0, metres: 0, calories: 0, squares: [.init(x: 77, y: 99)])
         let tiles = await cloud.model.tiles
         XCTAssertTrue(tiles.contains(.init(x: 99, y: 77)))
         XCTAssertTrue(tiles.contains(.init(x: 77, y: 99)))
@@ -62,7 +62,7 @@ final class CloudTests: XCTestCase {
     
     func testFinishLongWalk() async {
         _ = await cloud.walking(timestamp: Date(timeIntervalSince1970: 1).timestamp)
-        _ = await cloud.finish(steps: 65540, metres: 65541, calories: 324324232342322432, squares: [.init(x: 99, y: 77)])
+        _ = await cloud.finish(duration: 3600, steps: 65540, metres: 65541, calories: 324324232342322432, squares: [.init(x: 99, y: 77)])
         let model = await cloud.model
         XCTAssertEqual(1, model.walks.count)
         XCTAssertEqual(1, model.tiles.count)
@@ -80,7 +80,7 @@ final class CloudTests: XCTestCase {
                         steps: 34,
                         metres: 65,
                         calories: 67))
-        _ = await cloud.finish(steps: 3, metres: 5, calories: 2, squares: [.init(x: 99, y: 77)])
+        _ = await cloud.finish(duration: 200, steps: 3, metres: 5, calories: 2, squares: [.init(x: 99, y: 77)])
         let model = await cloud.model
         XCTAssertEqual(0, model.walking)
         XCTAssertEqual(1, model.walks.count)

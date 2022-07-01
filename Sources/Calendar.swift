@@ -5,7 +5,7 @@ extension Calendar {
         .init(timeZone.secondsFromGMT())
     }
     
-    func duration(from timestamp: UInt32) -> UInt16 {
+    public func duration(from timestamp: UInt32) -> UInt16 {
         var finish = Date.now
         let start = Date(timestamp: timestamp)
         
