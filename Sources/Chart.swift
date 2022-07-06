@@ -2,13 +2,6 @@ import Foundation
 import Dater
 
 public struct Chart {
-    public static let zero = Self(walks: [],
-                                  duration: .zero,
-                                  steps: .zero,
-                                  metres: .zero,
-                                  calories: .zero,
-                                  updated: nil)
-    
     public let calendar: [Days<Bool>]
     public let streak: Streak
     public let duration: Item

@@ -1,12 +1,10 @@
 import Foundation
 
 public struct Streak {
-    static let zero = Self(max: 0, current: 0)
-    
     public let max: Int
     public let current: Int
     
-    private init(max: Int, current: Int) {
+    init(max: Int, current: Int) {
         self.max = max
         self.current = current
     }
